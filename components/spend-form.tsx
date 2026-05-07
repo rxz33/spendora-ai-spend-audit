@@ -19,7 +19,17 @@ export default function SpendForm() {
     },
   ]
 );
-  const [results, setResults] = useState<any[]>([]);
+  interface AuditResult {
+  currentTool: string;
+  currentPlan: string;
+  currentSpend: number;
+  recommendation: string;
+  monthlySavings: number;
+  annualSavings: number;
+  reason: string;
+}
+
+const [results, setResults] = useState<AuditResult[]>([]);
 
   const addTool = () => {
     setTools([

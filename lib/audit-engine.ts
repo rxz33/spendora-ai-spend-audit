@@ -1,5 +1,3 @@
-import { pricingData } from "@/data/pricing";
-
 interface ToolSpend {
   tool: string;
   plan: string;
@@ -26,15 +24,21 @@ export function runAudit(tools: ToolSpend[]) {
     }
 
     // RULE 2 — Team plan with 1 seat
-    if (
-      tool.plan.toLowerCase().includes("team") &&
-      tool.seats <= 1
-    ) {
-      recommendation = `Downgrade from ${tool.plan}`;
-      savings = tool.monthlySpend / 2;
-      reason =
-        "Team plans are inefficient for single-seat usage";
-    }
+if (
+  tool.plan.toLowerCase().includes("team") &&
+  tool.seats <= 1
+) {
+  return {
+    currentTool: tool.tool,
+    currentPlan: tool.plan,
+    currentSpend: tool.monthlySpend,
+    recommendation: `Downgrade from ${tool.plan}`,
+    monthlySavings: tool.monthlySpend / 2,
+    annualSavings: (tool.monthlySpend / 2) * 12,
+    reason:
+      "Team plans are inefficient for single-seat usage",
+  };
+}
 
     // RULE 3 — Multiple AI chats
     if (
@@ -46,6 +50,21 @@ export function runAudit(tools: ToolSpend[]) {
       reason =
         "Alternative AI chat tools may reduce overlapping subscriptions";
     }
+
+    // RULE 4 — Multiple AI chats overlap
+if (
+  (tool.tool === "ChatGPT" ||
+    tool.tool === "Claude") &&
+  tool.monthlySpend >= 20
+) {
+  recommendation =
+    "Evaluate consolidating AI chat subscriptions";
+
+  savings = 10;
+
+  reason =
+    "Many teams maintain overlapping AI chat subscriptions with similar capabilities";
+}
 
     return {
       currentTool: tool.tool,

@@ -13,6 +13,11 @@ export default function AuditResults({
 }: {
   results: AuditResult[];
 }) {
+
+  if (results.length === 0) {
+  return null;
+}
+
   const totalSavings = results.reduce(
     (acc, item) => acc + item.monthlySavings,
     0
@@ -26,7 +31,7 @@ export default function AuditResults({
         </h2>
 
         <p className="mt-2 text-5xl font-bold text-green-400">
-          ${totalSavings}/mo
+          ${totalSavings.toFixed(0)}/mo
         </p>
 
         <p className="mt-2 text-white/60">
@@ -52,7 +57,7 @@ export default function AuditResults({
 
             <div className="text-right">
               <p className="text-2xl font-bold text-green-400">
-                ${result.monthlySavings}/mo
+                ${result.monthlySavings.toFixed(0)}/mo
               </p>
 
               <p className="text-white/60">
@@ -62,6 +67,11 @@ export default function AuditResults({
           </div>
 
           <div className="mt-6">
+            <div className="mb-4 inline-flex rounded-full bg-green-500/10 px-3 py-1 text-sm text-green-400">
+{result.monthlySavings >= 10
+  ? "High Savings Opportunity"
+  : "Optimization Opportunity"}
+</div>
             <p className="font-medium">
               Recommendation:
             </p>
