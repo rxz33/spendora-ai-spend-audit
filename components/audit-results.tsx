@@ -23,21 +23,60 @@ export default function AuditResults({
     0
   );
 
+  const totalCurrentSpend = results.reduce(
+  (acc, item) => acc + item.currentSpend,
+  0
+);
+
+const totalAnnualSpend = totalCurrentSpend * 12;
+
+const optimizationCount = results.filter(
+  (item) => item.monthlySavings > 0
+).length;
+
   return (
     <div className="mt-12 space-y-6">
-      <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-6">
-        <h2 className="text-3xl font-bold">
-          Estimated Monthly Savings
-        </h2>
+      <div className="grid gap-6 md:grid-cols-4">
+  <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+    <p className="text-sm text-white/60">
+      Monthly Spend
+    </p>
 
-        <p className="mt-2 text-5xl font-bold text-green-400">
-          ${totalSavings.toFixed(0)}/mo
-        </p>
+    <h2 className="mt-2 text-4xl font-bold">
+      ${totalCurrentSpend.toFixed(0)}
+    </h2>
+  </div>
 
-        <p className="mt-2 text-white/60">
-          ${(totalSavings * 12).toFixed(0)} annually
-        </p>
-      </div>
+  <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-6">
+    <p className="text-sm text-green-400">
+      Monthly Savings
+    </p>
+
+    <h2 className="mt-2 text-4xl font-bold text-green-400">
+      ${totalSavings.toFixed(0)}
+    </h2>
+  </div>
+
+  <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+    <p className="text-sm text-white/60">
+      Annual Spend
+    </p>
+
+    <h2 className="mt-2 text-4xl font-bold">
+      ${totalAnnualSpend.toFixed(0)}
+    </h2>
+  </div>
+
+  <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+    <p className="text-sm text-white/60">
+      Opportunities
+    </p>
+
+    <h2 className="mt-2 text-4xl font-bold">
+      {optimizationCount}
+    </h2>
+  </div>
+</div>
 
       {results.map((result, index) => (
         <div
