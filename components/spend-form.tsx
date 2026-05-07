@@ -1,10 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import { useLocalStorage } from "@/hooks/use-local-storage";
 import { pricingData } from "@/data/pricing";
 
 export default function SpendForm() {
-  const [tools, setTools] = useState([
+  const [tools, setTools] = useLocalStorage(
+  "spendora-tools",
+  [
     {
       tool: "",
       plan: "",
@@ -12,7 +14,8 @@ export default function SpendForm() {
       seats: 1,
       useCase: "",
     },
-  ]);
+  ]
+);
 
   const addTool = () => {
     setTools([
