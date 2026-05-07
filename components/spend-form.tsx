@@ -1,7 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { pricingData } from "@/data/pricing";
+import { runAudit } from "@/lib/audit-engine";
+import AuditResults from "@/components/audit-results";
 
 export default function SpendForm() {
   const [tools, setTools] = useLocalStorage(
@@ -16,6 +19,7 @@ export default function SpendForm() {
     },
   ]
 );
+  const [results, setResults] = useState<any[]>([]);
 
   const addTool = () => {
     setTools([
@@ -130,12 +134,26 @@ export default function SpendForm() {
         </div>
       ))}
 
-      <button
+            <button
         onClick={addTool}
         className="rounded-xl bg-white px-6 py-3 font-medium text-black"
       >
         Add Tool
       </button>
+
+      <button
+        onClick={() => {
+          const auditResults = runAudit(tools);
+          setResults(auditResults);
+        }}
+        className="ml-4 rounded-xl bg-green-500 px-6 py-3 font-medium text-black"
+      >
+        Analyze Spend
+      </button>
+
+      {results.length > 0 && (
+        <AuditResults results={results} />
+      )}
     </div>
   );
 }
