@@ -6,20 +6,7 @@ import { pricingData } from "@/data/pricing";
 import { runAudit } from "@/lib/audit-engine";
 import AuditResults from "@/components/audit-results";
 
-export default function SpendForm() {
-  const [tools, setTools] = useLocalStorage(
-  "spendora-tools",
-  [
-    {
-      tool: "",
-      plan: "",
-      monthlySpend: 0,
-      seats: 1,
-      useCase: "",
-    },
-  ]
-);
-  interface AuditResult {
+interface AuditResult {
   currentTool: string;
   currentPlan: string;
   currentSpend: number;
@@ -29,7 +16,31 @@ export default function SpendForm() {
   reason: string;
 }
 
-const [results, setResults] = useState<AuditResult[]>([]);
+interface ToolInput {
+  tool: string;
+  plan: string;
+  monthlySpend: number;
+  seats: number;
+  teamSize: number;
+  useCase: string;
+}
+
+export default function SpendForm() {
+  const [tools, setTools] = useLocalStorage<ToolInput[]>(
+    "spendora-tools",
+    [
+      {
+        tool: "",
+        plan: "",
+        monthlySpend: 0,
+        seats: 1,
+        teamSize: 1,
+        useCase: "",
+      },
+    ]
+  );
+
+  const [results, setResults] = useState<AuditResult[]>([]);
 
   const addTool = () => {
     setTools([
@@ -39,6 +50,7 @@ const [results, setResults] = useState<AuditResult[]>([]);
         plan: "",
         monthlySpend: 0,
         seats: 1,
+        teamSize: 1,
         useCase: "",
       },
     ]);
@@ -51,7 +63,7 @@ const [results, setResults] = useState<AuditResult[]>([]);
 
   const updateTool = (
     index: number,
-    field: string,
+    field: keyof ToolInput,
     value: string | number
   ) => {
     const updated = [...tools];
@@ -82,21 +94,40 @@ const [results, setResults] = useState<AuditResult[]>([]);
               <option value="">Select Tool</option>
 
               {pricingData.map((item) => (
-                <option key={item.tool} value={item.tool}>
+                <option
+                  key={item.tool}
+                  value={item.tool}
+                >
                   {item.tool}
                 </option>
               ))}
             </select>
 
-            <input
-              type="text"
-              placeholder="Plan"
+            <select
               className="rounded-lg bg-black p-3"
               value={tool.plan}
               onChange={(e) =>
                 updateTool(index, "plan", e.target.value)
               }
-            />
+            >
+              <option value="">
+                Select Plan
+              </option>
+
+              {pricingData
+                .find(
+                  (item) => item.tool === tool.tool
+                )
+                ?.plans.map((plan) => (
+                  <option
+                    key={plan.name}
+                    value={plan.name}
+                  >
+                    {plan.name} — $
+                    {plan.monthlyPrice}/mo
+                  </option>
+                ))}
+            </select>
 
             <input
               type="number"
@@ -118,24 +149,81 @@ const [results, setResults] = useState<AuditResult[]>([]);
               className="rounded-lg bg-black p-3"
               value={tool.seats}
               onChange={(e) =>
-                updateTool(index, "seats", Number(e.target.value))
+                updateTool(
+                  index,
+                  "seats",
+                  Number(e.target.value)
+                )
               }
             />
 
             <input
-              type="text"
-              placeholder="Use Case"
-              className="rounded-lg bg-black p-3 md:col-span-2"
-              value={tool.useCase}
+              type="number"
+              placeholder="Team Size"
+              className="rounded-lg bg-black p-3"
+              value={tool.teamSize}
               onChange={(e) =>
-                updateTool(index, "useCase", e.target.value)
+                updateTool(
+                  index,
+                  "teamSize",
+                  Number(e.target.value)
+                )
               }
             />
+
+            <select
+              className="rounded-lg bg-black p-3"
+              value={tool.useCase}
+              onChange={(e) =>
+                updateTool(
+                  index,
+                  "useCase",
+                  e.target.value
+                )
+              }
+            >
+              <option value="">
+                Select Use Case
+              </option>
+
+              <option value="coding">
+                Coding
+              </option>
+
+              <option value="writing">
+                Writing
+              </option>
+
+              <option value="research">
+                Research
+              </option>
+
+              <option value="data">
+                Data
+              </option>
+
+              <option value="mixed">
+                Mixed
+              </option>
+            </select>
           </div>
+
+          <p className="mt-4 text-sm text-white/60">
+            Estimated Monthly Cost:
+            <span className="ml-2 font-semibold text-white">
+              $
+              {(
+                tool.monthlySpend * tool.seats
+              ).toFixed(0)}
+              /mo
+            </span>
+          </p>
 
           {tools.length > 1 && (
             <button
-              onClick={() => removeTool(index)}
+              onClick={() =>
+                removeTool(index)
+              }
               className="mt-4 text-sm text-red-400"
             >
               Remove Tool
@@ -144,22 +232,26 @@ const [results, setResults] = useState<AuditResult[]>([]);
         </div>
       ))}
 
-            <button
-        onClick={addTool}
-        className="rounded-xl bg-white px-6 py-3 font-medium text-black"
-      >
-        Add Tool
-      </button>
+      <div className="flex gap-4">
+        <button
+          onClick={addTool}
+          className="rounded-xl bg-white px-6 py-3 font-medium text-black"
+        >
+          Add Tool
+        </button>
 
-      <button
-        onClick={() => {
-          const auditResults = runAudit(tools);
-          setResults(auditResults);
-        }}
-        className="ml-4 rounded-xl bg-green-500 px-6 py-3 font-medium text-black"
-      >
-        Analyze Spend
-      </button>
+        <button
+          onClick={() => {
+            const auditResults =
+              runAudit(tools);
+
+            setResults(auditResults);
+          }}
+          className="rounded-xl bg-green-500 px-6 py-3 font-medium text-black"
+        >
+          Analyze Spend
+        </button>
+      </div>
 
       {results.length > 0 && (
         <AuditResults results={results} />
