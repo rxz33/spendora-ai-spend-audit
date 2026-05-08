@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
+
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { pricingData } from "@/data/pricing";
 import { runAudit } from "@/lib/audit-engine";
+
 import AuditResults from "@/components/audit-results";
 
 interface AuditResult {
@@ -25,20 +27,30 @@ interface ToolInput {
   useCase: string;
 }
 
+interface SanitizedToolInput {
+  tool: string;
+  plan: string;
+  monthlySpend: number;
+  seats: number;
+  teamSize: number;
+  useCase: string;
+}
+
 export default function SpendForm() {
-  const [tools, setTools] = useLocalStorage<ToolInput[]>(
-    "spendora-tools",
-    [
-      {
-        tool: "",
-        plan: "",
-        monthlySpend: "",
-        seats: "",
-        teamSize: "",
-        useCase: "",
-      },
-    ]
-  );
+  const [tools, setTools] =
+    useLocalStorage<ToolInput[]>(
+      "spendora-tools",
+      [
+        {
+          tool: "",
+          plan: "",
+          monthlySpend: "",
+          seats: "",
+          teamSize: "",
+          useCase: "",
+        },
+      ]
+    );
 
   const [results, setResults] = useState<
     AuditResult[]
@@ -50,9 +62,9 @@ export default function SpendForm() {
       {
         tool: "",
         plan: "",
-        monthlySpend: 0,
-        seats: 1,
-        teamSize: 1,
+        monthlySpend: "",
+        seats: "",
+        teamSize: "",
         useCase: "",
       },
     ]);
@@ -89,7 +101,7 @@ export default function SpendForm() {
         </h2>
 
         <p className="max-w-2xl text-white/60">
-          Analyze your organization;s AI
+          Analyze your organization&apos;s AI
           tooling spend and identify
           optimization opportunities across
           vendors, plans, and overlapping
@@ -172,22 +184,19 @@ export default function SpendForm() {
                 </option>
 
                 {pricingData
-                  .find(
-                    (item) =>
-                      item.tool === tool.tool
-                  )
-                  ?.plans.map((plan) => (
-                    <option
-                      key={plan.name}
-                      value={plan.name}
-                    >
-                      {plan.name} — $
-                      {
-                        plan.monthlyPrice
-                      }
-                      /mo
-                    </option>
-                  ))}
+  .find(
+    (item) =>
+      item.tool === tool.tool
+  )
+  ?.plans.map((plan) => (
+    <option
+      key={plan.name}
+      value={plan.name}
+    >
+      {plan.name} — $
+      {plan.monthlyPrice}/mo
+    </option>
+  ))}
               </select>
             </div>
 
@@ -205,9 +214,11 @@ export default function SpendForm() {
                   updateTool(
                     index,
                     "monthlySpend",
-                    Number(
-                      e.target.value
-                    )
+                    e.target.value === ""
+                      ? ""
+                      : Number(
+                          e.target.value
+                        )
                   )
                 }
               />
@@ -227,9 +238,11 @@ export default function SpendForm() {
                   updateTool(
                     index,
                     "seats",
-                    Number(
-                      e.target.value
-                    )
+                    e.target.value === ""
+                      ? ""
+                      : Number(
+                          e.target.value
+                        )
                   )
                 }
               />
@@ -239,9 +252,11 @@ export default function SpendForm() {
               <label className="text-sm text-white/60">
                 Team Size
               </label>
+
               <p className="text-xs text-white/40">
-  Total people using AI tools across the team
-</p>
+                Total people using AI tools
+                across the team
+              </p>
 
               <input
                 type="number"
@@ -252,9 +267,11 @@ export default function SpendForm() {
                   updateTool(
                     index,
                     "teamSize",
-                    Number(
-                      e.target.value
-                    )
+                    e.target.value === ""
+                      ? ""
+                      : Number(
+                          e.target.value
+                        )
                   )
                 }
               />
@@ -311,9 +328,11 @@ export default function SpendForm() {
             <p className="mt-1 text-2xl font-bold">
               $
               {(
-  Number(tool.monthlySpend || 0) *
-  Number(tool.seats || 0)
-).toFixed(0)}
+                Number(
+                  tool.monthlySpend || 0
+                ) *
+                Number(tool.seats || 0)
+              ).toFixed(0)}
               /mo
             </p>
           </div>
@@ -330,19 +349,28 @@ export default function SpendForm() {
 
         <button
           onClick={() => {
-            const sanitizedTools = tools.map((tool) => ({
-  ...tool,
-  monthlySpend: Number(
-    tool.monthlySpend || 0
-  ),
-  seats: Number(tool.seats || 0),
-  teamSize: Number(
-    tool.teamSize || 0
-  ),
-}));
+            const sanitizedTools: SanitizedToolInput[] =
+  tools.map((tool) => ({
+    tool: tool.tool,
+    plan: tool.plan,
 
-const auditResults =
-  runAudit(sanitizedTools);
+    monthlySpend: Number(
+      tool.monthlySpend || 0
+    ),
+
+    seats: Number(
+      tool.seats || 0
+    ),
+
+    teamSize: Number(
+      tool.teamSize || 0
+    ),
+
+    useCase: tool.useCase,
+  }));
+
+            const auditResults =
+              runAudit(sanitizedTools);
 
             setResults(auditResults);
           }}

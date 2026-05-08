@@ -22,191 +22,158 @@ export default function AuditResults({
     0
   );
 
-  const annualSavings = totalSavings * 12;
+  const annualSavings =
+    totalSavings * 12;
 
-  const isEfficient = totalSavings < 100;
+  const isHighSavings =
+    totalSavings >= 500;
 
-  const showCredexCTA = totalSavings >= 500;
-
-  const totalCurrentSpend = results.reduce(
-    (acc, item) => acc + item.currentSpend,
-    0
-  );
-
-  const totalAnnualSpend =
-    totalCurrentSpend * 12;
-
-  const optimizationCount = results.filter(
-    (item) => item.monthlySavings > 0
-  ).length;
+  const isLowSavings =
+    totalSavings < 100;
 
   return (
-    <>
-      {isEfficient && (
-        <div className="rounded-2xl border border-blue-500/20 bg-blue-500/10 p-6">
-          <h2 className="text-2xl font-bold text-blue-400">
-            Your AI stack looks cost-efficient
-          </h2>
-
-          <p className="mt-2 max-w-2xl text-white/70">
-            Based on your current subscriptions
-            and usage patterns, there are
-            limited optimization opportunities
-            right now.
-          </p>
-        </div>
-      )}
-
-      <div className="mt-12 space-y-6">
-        <div className="grid gap-6 md:grid-cols-4">
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-            <p className="text-sm text-white/60">
-              Monthly Spend
-            </p>
-
-            <h2 className="mt-2 text-4xl font-bold">
-              $
-              {totalCurrentSpend.toFixed(0)}
+    <div className="mt-12 space-y-6">
+      <div
+        className={`rounded-2xl border p-6 ${
+          isHighSavings
+            ? "border-green-500/30 bg-green-500/10"
+            : isLowSavings
+            ? "border-blue-500/20 bg-blue-500/10"
+            : "border-white/10 bg-white/5"
+        }`}
+      >
+        <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+          <div>
+            <h2 className="text-3xl font-bold">
+              {isLowSavings
+                ? "Your AI Spend Looks Healthy"
+                : "Estimated Savings Opportunity"}
             </h2>
+
+            <p className="mt-3 max-w-2xl text-white/60">
+              {isLowSavings
+                ? "Your current AI tooling stack appears operationally efficient based on the usage information provided."
+                : "Optimization opportunities detected across overlapping subscriptions, inefficient plans, and vendor alternatives."}
+            </p>
           </div>
 
-          <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-6">
-            <p className="text-sm text-green-400">
-              Potential Monthly Savings
+          <div className="text-left md:text-right">
+            <p className="text-5xl font-bold text-green-400">
+              ${totalSavings}/mo
             </p>
 
-            <h2 className="mt-2 text-4xl font-bold text-green-400">
-              ${totalSavings.toFixed(0)}
-            </h2>
-          </div>
-
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-            <p className="text-sm text-white/60">
-              Annual Spend
+            <p className="mt-2 text-white/60">
+              ${annualSavings.toFixed(0)} annually
             </p>
-
-            <h2 className="mt-2 text-4xl font-bold">
-              $
-              {totalAnnualSpend.toFixed(0)}
-            </h2>
-          </div>
-
-          <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-            <p className="text-sm text-white/60">
-              Opportunities
-            </p>
-
-            <h2 className="mt-2 text-4xl font-bold">
-              {optimizationCount}
-            </h2>
           </div>
         </div>
 
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-          <h2 className="text-2xl font-bold">
-            Executive Summary
-          </h2>
-
-          <p className="mt-4 leading-7 text-white/70">
-            Your current AI tooling stack was
-            analyzed using deterministic pricing
-            and utilization heuristics. The audit
-            identified potential opportunities to
-            reduce redundant subscriptions,
-            optimize plan allocation, and
-            consolidate overlapping vendors.
-          </p>
-
-          <p className="mt-4 leading-7 text-white/70">
-            Estimated optimization potential:
-            <span className="ml-2 font-semibold text-green-400">
-              $
-              {totalSavings.toFixed(0)}
-              /month
-            </span>{" "}
-            ($
-            {annualSavings.toFixed(0)}
-            /year)
-          </p>
-        </div>
-
-        {showCredexCTA && (
-          <div className="rounded-2xl border border-green-500/20 bg-green-500/10 p-6">
-            <h2 className="text-3xl font-bold text-green-400">
+        {isHighSavings && (
+          <div className="mt-6 rounded-xl border border-green-500/20 bg-black/30 p-5">
+            <p className="text-lg font-semibold text-green-400">
               Significant Savings Opportunity
-              Detected
-            </h2>
-
-            <p className="mt-3 max-w-3xl text-white/70">
-              Your organization may be
-              overspending on overlapping AI
-              tooling. Credex can help
-              consolidate vendors, optimize seat
-              allocation, and reduce recurring
-              software spend.
             </p>
 
-            <button className="mt-6 rounded-xl bg-green-400 px-6 py-3 font-semibold text-black">
+            <p className="mt-2 text-white/70">
+              Teams saving more than
+              $500/month often benefit from
+              centralized procurement,
+              vendor consolidation, and
+              negotiated enterprise pricing
+              through Credex.
+            </p>
+
+            <button className="mt-4 rounded-lg bg-green-500 px-5 py-3 font-medium text-black transition hover:bg-green-400">
               Talk to Credex
             </button>
           </div>
         )}
 
+        {isLowSavings && (
+          <div className="mt-6 rounded-xl border border-white/10 bg-black/30 p-5">
+            <p className="text-lg font-semibold">
+              Stay Updated
+            </p>
+
+            <p className="mt-2 text-white/60">
+              We&apos;ll notify you when
+              pricing changes or new
+              optimization opportunities
+              become available for your AI
+              stack.
+            </p>
+
+            <div className="mt-4 flex flex-col gap-3 md:flex-row">
+              <input
+                type="email"
+                placeholder="Enter your work email"
+                className="w-full rounded-lg bg-black p-3"
+              />
+
+              <button className="rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-white/90">
+                Notify Me
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      <div className="grid gap-6">
         {results.map((result, index) => (
           <div
             key={index}
             className="rounded-2xl border border-white/10 bg-white/5 p-6"
           >
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col gap-6 md:flex-row md:items-start md:justify-between">
               <div>
+                <div className="mb-3 inline-flex rounded-full bg-green-500/10 px-3 py-1 text-sm text-green-400">
+                  Savings Opportunity
+                </div>
+
                 <h3 className="text-2xl font-semibold">
                   {result.currentTool}
                 </h3>
 
-                <p className="text-white/60">
-                  Current Plan:
-                  {" "}
+                <p className="mt-1 text-white/60">
+                  Current Plan:{" "}
                   {result.currentPlan}
+                </p>
+
+                <p className="mt-1 text-white/60">
+                  Current Spend: $
+                  {result.currentSpend}/mo
                 </p>
               </div>
 
-              <div className="text-right">
-                <p className="text-2xl font-bold text-green-400">
+              <div className="text-left md:text-right">
+                <p className="text-3xl font-bold text-green-400">
                   $
-                  {result.monthlySavings.toFixed(
-                    0
-                  )}
+                  {result.monthlySavings}
                   /mo
                 </p>
 
-                <p className="text-white/60">
+                <p className="mt-1 text-white/60">
                   savings
                 </p>
               </div>
             </div>
 
-            <div className="mt-6">
-              <div className="mb-4 inline-flex rounded-full bg-green-500/10 px-3 py-1 text-sm text-green-400">
-                {result.monthlySavings >= 10
-                  ? "High Savings Opportunity"
-                  : "Optimization Opportunity"}
-              </div>
-
-              <p className="font-medium">
-                Recommendation:
+            <div className="mt-6 border-t border-white/10 pt-6">
+              <p className="text-sm uppercase tracking-wide text-white/40">
+                Recommendation
               </p>
 
-              <p className="mt-1 text-white/80">
+              <p className="mt-2 text-lg font-medium text-white">
                 {result.recommendation}
               </p>
 
-              <p className="mt-4 text-sm text-white/60">
+              <p className="mt-4 max-w-3xl text-white/60">
                 {result.reason}
               </p>
             </div>
           </div>
         ))}
       </div>
-    </>
+    </div>
   );
 }
