@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+
 import { runAudit } from "@/lib/audit-engine";
 
 describe("audit engine", () => {
@@ -9,13 +10,14 @@ describe("audit engine", () => {
         plan: "Pro",
         monthlySpend: 20,
         seats: 1,
-        useCase: "Coding",
+        teamSize: 1,
+        useCase: "coding",
       },
     ]);
 
-    expect(results[0].recommendation).toContain(
-      "GitHub Copilot"
-    );
+    expect(
+      results[0].recommendation
+    ).toContain("GitHub Copilot");
   });
 
   it("calculates monthly savings correctly", () => {
@@ -25,11 +27,14 @@ describe("audit engine", () => {
         plan: "Pro",
         monthlySpend: 20,
         seats: 1,
-        useCase: "Coding",
+        teamSize: 1,
+        useCase: "coding",
       },
     ]);
 
-    expect(results[0].monthlySavings).toBe(10);
+    expect(
+      results[0].monthlySavings
+    ).toBe(10);
   });
 
   it("calculates annual savings correctly", () => {
@@ -39,42 +44,91 @@ describe("audit engine", () => {
         plan: "Pro",
         monthlySpend: 20,
         seats: 1,
-        useCase: "Coding",
+        teamSize: 1,
+        useCase: "coding",
       },
     ]);
 
-    expect(results[0].annualSavings).toBe(120);
+    expect(
+      results[0].annualSavings
+    ).toBe(120);
   });
 
-  it("detects inefficient team plans", () => {
+  it("detects inefficient small-team plans", () => {
     const results = runAudit([
       {
         tool: "Claude",
         plan: "Team",
         monthlySpend: 30,
-        seats: 1,
-        useCase: "AI Chat",
+        seats: 2,
+        teamSize: 2,
+        useCase: "writing",
       },
     ]);
 
-    expect(results[0].recommendation).toContain(
-      "Downgrade"
-    );
+    expect(
+      results[0].recommendation
+    ).toContain("Downgrade");
+
+    expect(
+      results[0].monthlySavings
+    ).toBeGreaterThan(0);
   });
 
-  it("returns optimal recommendation when no issues found", () => {
+  it("detects capability mismatch for use case", () => {
     const results = runAudit([
       {
-        tool: "Perplexity",
+        tool: "Gemini",
         plan: "Pro",
-        monthlySpend: 17,
-        seats: 5,
-        useCase: "Research",
+        monthlySpend: 20,
+        seats: 3,
+        teamSize: 3,
+        useCase: "coding",
       },
     ]);
 
-    expect(results[0].recommendation).toContain(
-      "optimal"
+    expect(
+      results[0].recommendation
+    ).toContain("better aligned");
+  });
+
+  it("detects API optimization opportunities", () => {
+    const results = runAudit([
+      {
+        tool: "ChatGPT",
+        plan: "Plus",
+        monthlySpend: 20,
+        seats: 8,
+        teamSize: 8,
+        useCase: "coding",
+      },
+    ]);
+
+    expect(
+      results[0].recommendation
+    ).toContain("API");
+  });
+
+  it("returns honest recommendation when setup is reasonable", () => {
+    const results = runAudit([
+      {
+        tool: "GitHub Copilot",
+        plan: "Individual",
+        monthlySpend: 10,
+        seats: 2,
+        teamSize: 2,
+        useCase: "coding",
+      },
+    ]);
+
+    expect(
+      results[0].recommendation
+    ).toContain(
+      "operationally reasonable"
     );
+
+    expect(
+      results[0].monthlySavings
+    ).toBe(0);
   });
 });

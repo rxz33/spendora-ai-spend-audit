@@ -19,9 +19,9 @@ interface AuditResult {
 interface ToolInput {
   tool: string;
   plan: string;
-  monthlySpend: number;
-  seats: number;
-  teamSize: number;
+  monthlySpend: number | "";
+  seats: number | "";
+  teamSize: number | "";
   useCase: string;
 }
 
@@ -32,15 +32,17 @@ export default function SpendForm() {
       {
         tool: "",
         plan: "",
-        monthlySpend: 0,
-        seats: 1,
-        teamSize: 1,
+        monthlySpend: "",
+        seats: "",
+        teamSize: "",
         useCase: "",
       },
     ]
   );
 
-  const [results, setResults] = useState<AuditResult[]>([]);
+  const [results, setResults] = useState<
+    AuditResult[]
+  >([]);
 
   const addTool = () => {
     setTools([
@@ -57,7 +59,10 @@ export default function SpendForm() {
   };
 
   const removeTool = (index: number) => {
-    const updated = tools.filter((_, i) => i !== index);
+    const updated = tools.filter(
+      (_, i) => i !== index
+    );
+
     setTools(updated);
   };
 
@@ -77,177 +82,271 @@ export default function SpendForm() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
+      <div className="space-y-2">
+        <h2 className="text-3xl font-bold">
+          Audit Workspace
+        </h2>
+
+        <p className="max-w-2xl text-white/60">
+          Analyze your organization;s AI
+          tooling spend and identify
+          optimization opportunities across
+          vendors, plans, and overlapping
+          subscriptions.
+        </p>
+      </div>
+
       {tools.map((tool, index) => (
         <div
           key={index}
           className="rounded-2xl border border-white/10 bg-white/5 p-6"
         >
-          <div className="grid gap-4 md:grid-cols-2">
-            <select
-              className="rounded-lg bg-black p-3"
-              value={tool.tool}
-              onChange={(e) =>
-                updateTool(index, "tool", e.target.value)
-              }
-            >
-              <option value="">Select Tool</option>
+          <div className="mb-6 flex items-center justify-between">
+            <h3 className="text-xl font-semibold">
+              Tool #{index + 1}
+            </h3>
 
-              {pricingData.map((item) => (
-                <option
-                  key={item.tool}
-                  value={item.tool}
-                >
-                  {item.tool}
-                </option>
-              ))}
-            </select>
-
-            <select
-              className="rounded-lg bg-black p-3"
-              value={tool.plan}
-              onChange={(e) =>
-                updateTool(index, "plan", e.target.value)
-              }
-            >
-              <option value="">
-                Select Plan
-              </option>
-
-              {pricingData
-                .find(
-                  (item) => item.tool === tool.tool
-                )
-                ?.plans.map((plan) => (
-                  <option
-                    key={plan.name}
-                    value={plan.name}
-                  >
-                    {plan.name} — $
-                    {plan.monthlyPrice}/mo
-                  </option>
-                ))}
-            </select>
-
-            <input
-              type="number"
-              placeholder="Monthly Spend"
-              className="rounded-lg bg-black p-3"
-              value={tool.monthlySpend}
-              onChange={(e) =>
-                updateTool(
-                  index,
-                  "monthlySpend",
-                  Number(e.target.value)
-                )
-              }
-            />
-
-            <input
-              type="number"
-              placeholder="Seats"
-              className="rounded-lg bg-black p-3"
-              value={tool.seats}
-              onChange={(e) =>
-                updateTool(
-                  index,
-                  "seats",
-                  Number(e.target.value)
-                )
-              }
-            />
-
-            <input
-              type="number"
-              placeholder="Team Size"
-              className="rounded-lg bg-black p-3"
-              value={tool.teamSize}
-              onChange={(e) =>
-                updateTool(
-                  index,
-                  "teamSize",
-                  Number(e.target.value)
-                )
-              }
-            />
-
-            <select
-              className="rounded-lg bg-black p-3"
-              value={tool.useCase}
-              onChange={(e) =>
-                updateTool(
-                  index,
-                  "useCase",
-                  e.target.value
-                )
-              }
-            >
-              <option value="">
-                Select Use Case
-              </option>
-
-              <option value="coding">
-                Coding
-              </option>
-
-              <option value="writing">
-                Writing
-              </option>
-
-              <option value="research">
-                Research
-              </option>
-
-              <option value="data">
-                Data
-              </option>
-
-              <option value="mixed">
-                Mixed
-              </option>
-            </select>
+            {tools.length > 1 && (
+              <button
+                onClick={() =>
+                  removeTool(index)
+                }
+                className="text-sm text-red-400 transition hover:text-red-300"
+              >
+                Remove
+              </button>
+            )}
           </div>
 
-          <p className="mt-4 text-sm text-white/60">
-            Estimated Monthly Cost:
-            <span className="ml-2 font-semibold text-white">
+          <div className="grid gap-5 md:grid-cols-2">
+            <div className="space-y-2">
+              <label className="text-sm text-white/60">
+                Tool
+              </label>
+
+              <select
+                className="w-full rounded-lg bg-black p-3"
+                value={tool.tool}
+                onChange={(e) =>
+                  updateTool(
+                    index,
+                    "tool",
+                    e.target.value
+                  )
+                }
+              >
+                <option value="">
+                  Select Tool
+                </option>
+
+                {pricingData.map((item) => (
+                  <option
+                    key={item.tool}
+                    value={item.tool}
+                  >
+                    {item.tool}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-white/60">
+                Plan
+              </label>
+
+              <select
+                className="w-full rounded-lg bg-black p-3"
+                value={tool.plan}
+                onChange={(e) =>
+                  updateTool(
+                    index,
+                    "plan",
+                    e.target.value
+                  )
+                }
+              >
+                <option value="">
+                  Select Plan
+                </option>
+
+                {pricingData
+                  .find(
+                    (item) =>
+                      item.tool === tool.tool
+                  )
+                  ?.plans.map((plan) => (
+                    <option
+                      key={plan.name}
+                      value={plan.name}
+                    >
+                      {plan.name} — $
+                      {
+                        plan.monthlyPrice
+                      }
+                      /mo
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-white/60">
+                Monthly Spend ($)
+              </label>
+
+              <input
+                type="number"
+                placeholder="20"
+                className="w-full rounded-lg bg-black p-3"
+                value={tool.monthlySpend}
+                onChange={(e) =>
+                  updateTool(
+                    index,
+                    "monthlySpend",
+                    Number(
+                      e.target.value
+                    )
+                  )
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-white/60">
+                Seats
+              </label>
+
+              <input
+                type="number"
+                placeholder="5"
+                className="w-full rounded-lg bg-black p-3"
+                value={tool.seats}
+                onChange={(e) =>
+                  updateTool(
+                    index,
+                    "seats",
+                    Number(
+                      e.target.value
+                    )
+                  )
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-white/60">
+                Team Size
+              </label>
+              <p className="text-xs text-white/40">
+  Total people using AI tools across the team
+</p>
+
+              <input
+                type="number"
+                placeholder="10"
+                className="w-full rounded-lg bg-black p-3"
+                value={tool.teamSize}
+                onChange={(e) =>
+                  updateTool(
+                    index,
+                    "teamSize",
+                    Number(
+                      e.target.value
+                    )
+                  )
+                }
+              />
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm text-white/60">
+                Use Case
+              </label>
+
+              <select
+                className="w-full rounded-lg bg-black p-3"
+                value={tool.useCase}
+                onChange={(e) =>
+                  updateTool(
+                    index,
+                    "useCase",
+                    e.target.value
+                  )
+                }
+              >
+                <option value="">
+                  Select Use Case
+                </option>
+
+                <option value="coding">
+                  Coding
+                </option>
+
+                <option value="writing">
+                  Writing
+                </option>
+
+                <option value="research">
+                  Research
+                </option>
+
+                <option value="data">
+                  Data
+                </option>
+
+                <option value="mixed">
+                  Mixed
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-6 rounded-xl border border-white/10 bg-black/30 p-4">
+            <p className="text-sm text-white/60">
+              Estimated Monthly Cost
+            </p>
+
+            <p className="mt-1 text-2xl font-bold">
               $
               {(
-                tool.monthlySpend * tool.seats
-              ).toFixed(0)}
+  Number(tool.monthlySpend || 0) *
+  Number(tool.seats || 0)
+).toFixed(0)}
               /mo
-            </span>
-          </p>
-
-          {tools.length > 1 && (
-            <button
-              onClick={() =>
-                removeTool(index)
-              }
-              className="mt-4 text-sm text-red-400"
-            >
-              Remove Tool
-            </button>
-          )}
+            </p>
+          </div>
         </div>
       ))}
 
-      <div className="flex gap-4">
+      <div className="flex flex-wrap gap-4">
         <button
           onClick={addTool}
-          className="rounded-xl bg-white px-6 py-3 font-medium text-black"
+          className="rounded-xl border border-white/10 bg-white/5 px-6 py-3 font-medium transition hover:bg-white/10"
         >
           Add Tool
         </button>
 
         <button
           onClick={() => {
-            const auditResults =
-              runAudit(tools);
+            const sanitizedTools = tools.map((tool) => ({
+  ...tool,
+  monthlySpend: Number(
+    tool.monthlySpend || 0
+  ),
+  seats: Number(tool.seats || 0),
+  teamSize: Number(
+    tool.teamSize || 0
+  ),
+}));
+
+const auditResults =
+  runAudit(sanitizedTools);
 
             setResults(auditResults);
           }}
-          className="rounded-xl bg-green-500 px-6 py-3 font-medium text-black"
+          className="rounded-xl bg-green-500 px-6 py-3 font-medium text-black transition hover:bg-green-400"
         >
           Analyze Spend
         </button>

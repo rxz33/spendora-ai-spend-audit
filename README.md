@@ -1,36 +1,100 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Spendora — AI Spend Audit
 
-## Getting Started
+## Live Demo
 
-First, run the development server:
+https://spendora-ai-spend-audit.vercel.app/
+
+---
+
+## Product Overview
+
+Spendora is an AI spend auditing tool that helps teams analyze subscriptions across AI vendors, identify redundant tooling, and estimate potential monthly savings.
+
+The product uses deterministic TypeScript audit rules to generate explainable optimization recommendations instead of relying entirely on AI-generated outputs.
+
+Pricing references and vendor research are documented in `PRICING_DATA.md`.
+
+---
+
+## Features
+
+- Multi-tool AI spend input form
+- Structured vendor and plan selection
+- Deterministic audit engine
+- Savings opportunity analysis
+- Executive summary generation
+- Honest “already optimized” recommendation state
+- Credex CTA for high-savings accounts
+- Local persistence using localStorage
+- Automated testing with Vitest
+- GitHub Actions CI pipeline
+- Husky pre-commit quality checks
+
+## Audit Logic
+
+The recommendation engine intentionally uses deterministic TypeScript rules for the first version of the product.
+
+Current optimization heuristics include:
+- identifying inefficient team plans
+- detecting overlapping AI chat subscriptions
+- suggesting lower-cost alternatives
+- highlighting redundant tooling
+- calculating estimated monthly and annual savings
+
+This approach improves:
+- explainability
+- testing reliability
+- consistency of recommendations
+- pricing normalization
+
+## Tech Stack
+
+### Frontend
+- Next.js (App Router)
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+
+### Testing
+- Vitest
+
+### Infrastructure
+- Vercel
+- GitHub Actions
+- Husky
+
+## Architecture
+
+See:
+- ARCHITECTURE.md
+
+## Running Locally
 
 ```bash
+git clone <repo-url>
+
+cd spendora-ai-spend-audit
+
+npm install
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Running Tests
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+npm run test
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Deployment
 
-## Learn More
+The application is deployed on Vercel with automated CI checks using GitHub Actions.
 
-To learn more about Next.js, take a look at the following resources:
+## Future Improvements
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- shareable audit reports
+- AI-generated optimization summaries
+- organization-wide spend tracking
+- usage-based pricing normalization
+- vendor overlap detection
+- CRM integrations
