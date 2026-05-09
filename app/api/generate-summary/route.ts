@@ -1,11 +1,6 @@
 import { NextResponse } from "next/server";
 import OpenAI from "openai";
 
-const client = new OpenAI({
-  apiKey: process.env.GROQ_API_KEY,
-  baseURL: "https://api.groq.com/openai/v1",
-});
-
 interface SummaryData {
   totalMonthlySavings: number;
 }
@@ -21,6 +16,11 @@ function generateFallbackSummary(
 }
 
 export async function POST(req: Request) {
+  const client = new OpenAI({
+    apiKey: process.env.GROQ_API_KEY,
+    baseURL: "https://api.groq.com/openai/v1",
+  });
+
   try {
     const data = await req.json();
 

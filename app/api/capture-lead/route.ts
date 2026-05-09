@@ -2,9 +2,11 @@ import { NextResponse } from "next/server";
 import { supabase } from "@/lib/supabase";
 import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
 export async function POST(req: Request) {
+  const resend = new Resend(
+    process.env.RESEND_API_KEY
+  );
+
   try {
     const body = await req.json();
 
@@ -31,8 +33,10 @@ export async function POST(req: Request) {
           email,
           company_name: companyName,
           role,
-          monthly_savings: monthlySavings,
-          annual_savings: annualSavings,
+          monthly_savings:
+            monthlySavings,
+          annual_savings:
+            annualSavings,
         },
       ]);
 
@@ -41,9 +45,11 @@ export async function POST(req: Request) {
     }
 
     await resend.emails.send({
-      from: "Spendora <onboarding@resend.dev>",
+      from:
+        "Spendora <onboarding@resend.dev>",
       to: email,
-      subject: "Your Spendora AI Audit",
+      subject:
+        "Your Spendora AI Audit",
       html: `
         <h2>Your AI Spend Audit</h2>
 
@@ -67,7 +73,10 @@ export async function POST(req: Request) {
     console.error(error);
 
     return NextResponse.json(
-      { error: "Failed to capture lead" },
+      {
+        error:
+          "Failed to capture lead",
+      },
       { status: 500 }
     );
   }
