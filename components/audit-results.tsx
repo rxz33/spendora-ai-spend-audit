@@ -10,8 +10,10 @@ interface AuditResult {
 
 export default function AuditResults({
   results,
+  summary,
 }: {
   results: AuditResult[];
+  summary: string;
 }) {
   if (results.length === 0) {
     return null;
@@ -22,17 +24,15 @@ export default function AuditResults({
     0
   );
 
-  const annualSavings =
-    totalSavings * 12;
+  const annualSavings = totalSavings * 12;
 
-  const isHighSavings =
-    totalSavings >= 500;
+  const isHighSavings = totalSavings >= 500;
 
-  const isLowSavings =
-    totalSavings < 100;
+  const isLowSavings = totalSavings < 100;
 
   return (
     <div className="mt-12 space-y-6">
+      {/* HERO SECTION */}
       <div
         className={`rounded-2xl border p-6 ${
           isHighSavings
@@ -75,12 +75,9 @@ export default function AuditResults({
             </p>
 
             <p className="mt-2 text-white/70">
-              Teams saving more than
-              $500/month often benefit from
-              centralized procurement,
-              vendor consolidation, and
-              negotiated enterprise pricing
-              through Credex.
+              Teams saving more than $500/month often benefit from centralized
+              procurement, vendor consolidation, and negotiated enterprise
+              pricing through Credex.
             </p>
 
             <button className="mt-4 rounded-lg bg-green-500 px-5 py-3 font-medium text-black transition hover:bg-green-400">
@@ -96,11 +93,8 @@ export default function AuditResults({
             </p>
 
             <p className="mt-2 text-white/60">
-              We&apos;ll notify you when
-              pricing changes or new
-              optimization opportunities
-              become available for your AI
-              stack.
+              We&apos;ll notify you when pricing changes or new optimization
+              opportunities become available for your AI stack.
             </p>
 
             <div className="mt-4 flex flex-col gap-3 md:flex-row">
@@ -118,6 +112,22 @@ export default function AuditResults({
         )}
       </div>
 
+      {/* AI SUMMARY */}
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <div className="flex items-center gap-2">
+          <div className="h-2 w-2 rounded-full bg-green-400" />
+
+          <p className="text-sm uppercase tracking-wide text-white/40">
+            AI Audit Summary
+          </p>
+        </div>
+
+        <p className="mt-4 max-w-4xl text-lg leading-8 text-white/70">
+          {summary}
+        </p>
+      </div>
+
+      {/* RECOMMENDATION CARDS */}
       <div className="grid gap-6">
         {results.map((result, index) => (
           <div
@@ -135,21 +145,17 @@ export default function AuditResults({
                 </h3>
 
                 <p className="mt-1 text-white/60">
-                  Current Plan:{" "}
-                  {result.currentPlan}
+                  Current Plan: {result.currentPlan}
                 </p>
 
                 <p className="mt-1 text-white/60">
-                  Current Spend: $
-                  {result.currentSpend}/mo
+                  Current Spend: ${result.currentSpend}/mo
                 </p>
               </div>
 
               <div className="text-left md:text-right">
                 <p className="text-3xl font-bold text-green-400">
-                  $
-                  {result.monthlySavings}
-                  /mo
+                  ${result.monthlySavings}/mo
                 </p>
 
                 <p className="mt-1 text-white/60">
