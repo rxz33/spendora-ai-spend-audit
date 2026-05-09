@@ -12,7 +12,7 @@
 
 ## Day 2 — 2026-05-08
 
-**Hours worked:** 7-8
+**Hours worked:** 7
 
 **What I did:** Continued building the Spendora MVP by completing the deterministic audit engine and improving the spend input workflow. Added support for multiple AI vendors, plan-aware pricing selection, localStorage persistence, and structured pricing data. Implemented audit recommendation logic for inefficient team plans, overlapping subscriptions, cheaper alternatives, and API/credit-based optimization opportunities. Improved the audit results experience with honest low-savings states, savings summaries, and Credex CTA handling for larger optimization opportunities. Added Vitest coverage, Husky pre-commit hooks, and CI quality checks. Also conducted user research conversations with developers and engineers using Claude, ChatGPT, Copilot, and free-tier AI tooling.
 
@@ -21,3 +21,19 @@
 **Blockers / what I'm stuck on:** Vendor pricing structures are inconsistent between seat-based subscriptions and usage-based APIs. Some interview responses were short or vague, which made extracting actionable insights harder than expected.
 
 **Plan for tomorrow:** Finalize repository polish, improve documentation quality, complete README refinements, and prepare the project for a full review pass against the assignment requirements.
+
+## Day 3 — 2026-05-09
+
+**Hours worked:** 4
+
+**What I did:** Focused on production hardening, AI integration, deployment stability, and repository polish. Implemented the AI-generated personalized audit summary feature using Groq with a deterministic fallback summary for graceful degradation. Added a dedicated API route for summary generation, integrated the AI summary into the audit workflow and results experience, and documented prompt engineering decisions in `PROMPTS.md`. Refactored the architecture to keep API keys server-side instead of exposing SDK usage inside client components.
+
+I also implemented lead capture infrastructure using Supabase and Resend, including honeypot-based spam protection and transactional audit emails. During deployment testing, I encountered multiple CI/CD and Next.js App Router issues where builds succeeded locally but failed inside GitHub Actions. I debugged hydration mismatches caused by localStorage persistence, refactored the spend form into a client-only dynamically imported wrapper component, and moved OpenAI/Groq, Resend, and Supabase initialization from build-time module scope into runtime route handlers to prevent environment-variable-related build failures during page data collection.
+
+Additionally, I completed reflection documentation, improved repository structure, refined commit hygiene, and finalized several architectural cleanup tasks after multiple CI validation cycles.
+
+**What I learned:** I learned a lot about the distinction between build-time evaluation and runtime execution in Next.js App Router/serverless environments. I also gained practical experience debugging CI-specific failures that did not appear locally, especially around environment variables, route evaluation, and hydration behavior. Another important lesson was that production deployment constraints often expose architectural weaknesses that are invisible during local development.
+
+**Blockers / what I'm stuck on:** The biggest blocker today was deployment instability caused by SDK initialization at module scope. GitHub Actions failed during “Collecting page data” because API clients were being initialized before runtime environment variables existed. I also had to debug hydration mismatches caused by localStorage-driven UI state and rethink the SSR strategy for the spend form component.
+
+**Plan for tomorrow:** Complete remaining assignment deliverables including README polish, GTM and economics documentation, shareable audit URLs, final deployment QA, Lighthouse optimization, and a full assignment-compliance review before submission.
