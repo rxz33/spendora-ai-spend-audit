@@ -56,6 +56,12 @@ export default function SpendForm() {
     AuditResult[]
   >([]);
 
+  const [summary, setSummary] =
+    useState("");
+
+  const [loading, setLoading] =
+    useState(false);
+
   const addTool = () => {
     setTools([
       ...tools,
@@ -91,6 +97,86 @@ export default function SpendForm() {
     };
 
     setTools(updated);
+  };
+
+  const handleAudit = async () => {
+    setLoading(true);
+
+    const sanitizedTools: SanitizedToolInput[] =
+      tools.map((tool) => ({
+        tool: tool.tool,
+        plan: tool.plan,
+
+        monthlySpend: Number(
+          tool.monthlySpend || 0
+        ),
+
+        seats: Number(
+          tool.seats || 0
+        ),
+
+        teamSize: Number(
+          tool.teamSize || 0
+        ),
+
+        useCase: tool.useCase,
+      }));
+
+    const auditResults =
+      runAudit(sanitizedTools);
+
+    setResults(auditResults);
+
+    const totalMonthlySavings =
+      auditResults.reduce(
+        (acc, item) =>
+          acc + item.monthlySavings,
+        0
+      );
+
+    const totalAnnualSavings =
+      totalMonthlySavings * 12;
+
+    try {
+      const response = await fetch(
+        "/api/generate-summary",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            totalMonthlySavings,
+            totalAnnualSavings,
+            recommendations:
+              auditResults.map((r) => ({
+                tool: r.currentTool,
+                currentSpend:
+                  r.currentSpend,
+                recommendation:
+                  r.recommendation,
+                monthlySavings:
+                  r.monthlySavings,
+                reasoning: r.reason,
+              })),
+          }),
+        }
+      );
+
+      const data =
+        await response.json();
+
+      setSummary(data.summary);
+    } catch (error) {
+      console.error(error);
+
+      setSummary(
+        "Your audit identified optimization opportunities across your AI tooling stack, including plan efficiency improvements and reduced subscription overlap."
+      );
+    }
+
+    setLoading(false);
   };
 
   return (
@@ -184,19 +270,21 @@ export default function SpendForm() {
                 </option>
 
                 {pricingData
-  .find(
-    (item) =>
-      item.tool === tool.tool
-  )
-  ?.plans.map((plan) => (
-    <option
-      key={plan.name}
-      value={plan.name}
-    >
-      {plan.name} — $
-      {plan.monthlyPrice}/mo
-    </option>
-  ))}
+                  .find(
+                    (item) =>
+                      item.tool ===
+                      tool.tool
+                  )
+                  ?.plans.map((plan) => (
+                    <option
+                      key={plan.name}
+                      value={plan.name}
+                    >
+                      {plan.name} — $
+                      {plan.monthlyPrice}
+                      /mo
+                    </option>
+                  ))}
               </select>
             </div>
 
@@ -319,23 +407,6 @@ export default function SpendForm() {
               </select>
             </div>
           </div>
-
-          <div className="mt-6 rounded-xl border border-white/10 bg-black/30 p-4">
-            <p className="text-sm text-white/60">
-              Estimated Monthly Cost
-            </p>
-
-            <p className="mt-1 text-2xl font-bold">
-              $
-              {(
-                Number(
-                  tool.monthlySpend || 0
-                ) *
-                Number(tool.seats || 0)
-              ).toFixed(0)}
-              /mo
-            </p>
-          </div>
         </div>
       ))}
 
@@ -348,40 +419,21 @@ export default function SpendForm() {
         </button>
 
         <button
-          onClick={() => {
-            const sanitizedTools: SanitizedToolInput[] =
-  tools.map((tool) => ({
-    tool: tool.tool,
-    plan: tool.plan,
-
-    monthlySpend: Number(
-      tool.monthlySpend || 0
-    ),
-
-    seats: Number(
-      tool.seats || 0
-    ),
-
-    teamSize: Number(
-      tool.teamSize || 0
-    ),
-
-    useCase: tool.useCase,
-  }));
-
-            const auditResults =
-              runAudit(sanitizedTools);
-
-            setResults(auditResults);
-          }}
-          className="rounded-xl bg-green-500 px-6 py-3 font-medium text-black transition hover:bg-green-400"
+          onClick={handleAudit}
+          disabled={loading}
+          className="rounded-xl bg-green-500 px-6 py-3 font-medium text-black transition hover:bg-green-400 disabled:opacity-50"
         >
-          Analyze Spend
+          {loading
+            ? "Generating Audit..."
+            : "Analyze Spend"}
         </button>
       </div>
 
       {results.length > 0 && (
-        <AuditResults results={results} />
+        <AuditResults
+          results={results}
+          summary={summary}
+        />
       )}
     </div>
   );
