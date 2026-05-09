@@ -1,4 +1,4 @@
-import SpendForm from "@/components/spend-form";
+import SpendFormWrapper from "@/components/spend-form-wrapper";
 
 export default function HomePage() {
   return (
@@ -15,8 +15,10 @@ export default function HomePage() {
             </h1>
 
             <p className="mt-6 max-w-2xl text-xl text-white/70">
-              Analyze your AI subscriptions, identify wasted spend,
-              and discover cheaper alternatives for your team.
+              Analyze your AI subscriptions,
+              identify wasted spend, and
+              discover cheaper alternatives
+              for your team.
             </p>
 
             <div className="mt-8 flex gap-4">
@@ -33,7 +35,7 @@ export default function HomePage() {
       </section>
 
       <section className="mx-auto max-w-6xl px-6 py-20">
-        <SpendForm />
+        <SpendFormWrapper />
       </section>
     </main>
   );
