@@ -1,19 +1,3 @@
-## Day 4 — 2026-05-10
-
-**Hours worked:** 6
-
-**What I did:** Completed all remaining business documentation files (LANDING_COPY.md, METRICS.md, GTM.md, ECONOMICS.md) with real data and specific strategies aligned with assignment requirements. Updated README.md with substantive 5-part "Decisions" section explaining trade-offs in architecture, tooling, and product strategy. Refined ARCHITECTURE.md system flow diagram to include shareable audit URLs and complete customer journey. Committed all documentation updates to main branch (commit 4deb931).
-
-Started implementation of shareable audit URLs feature (MVP #6). Analyzed current codebase for audit ID generation patterns, Supabase schema requirements, and API route structure. Planned dynamic route implementation (`/audit/[id]`) with OG/Twitter Card meta tags for link previews.
-
-**What I learned:** Unit economics validation was crucial — by cross-referencing GTM channel assumptions with ECONOMICS conversion funnels, I validated that the $220 per-audit value to Credex is consistent across documents. This consistency signals realistic thinking. Also learned that concrete GTM channels (specific subreddits, Slack communities) score much higher than generic "post on Twitter" strategies.
-
-**Blockers / what I'm stuck on:** None blocking today's progress. Shareable URLs implementation requires coordination between API route for audit data retrieval, dynamic page rendering, and Supabase audit storage schema.
-
-**Plan for tomorrow:** Complete shareable audit URLs implementation, test link previews on Twitter/Slack, add screenshots to README, run Lighthouse audit on deployed URL, commit feature with `feat: add shareable audit urls and og tags`.
-
----
-
 ## Day 1 — 2026-05-07
 
 **Hours worked:** 7
@@ -53,3 +37,25 @@ Additionally, I completed reflection documentation, improved repository structur
 **Blockers / what I'm stuck on:** The biggest blocker today was deployment instability caused by SDK initialization at module scope. GitHub Actions failed during “Collecting page data” because API clients were being initialized before runtime environment variables existed. I also had to debug hydration mismatches caused by localStorage-driven UI state and rethink the SSR strategy for the spend form component.
 
 **Plan for tomorrow:** Complete remaining assignment deliverables including README polish, GTM and economics documentation, shareable audit URLs, final deployment QA, Lighthouse optimization, and a full assignment-compliance review before submission.
+
+## Day 4 — 2026-05-10
+
+**Hours worked:** 8
+
+**What I did:** Completed all remaining business documentation files (LANDING_COPY.md, METRICS.md, GTM.md, ECONOMICS.md) with real data and specific strategies aligned with assignment requirements. Updated README.md with substantive 5-part "Decisions" section explaining trade-offs in architecture, tooling, and product strategy. Refined ARCHITECTURE.md system flow diagram to include shareable audit URLs and complete customer journey. Committed all documentation updates to main branch (commit 4deb931).
+
+Implemented the complete shareable audit URLs feature (MVP #6) with OG/Twitter Card meta tags for rich link previews. Built dynamic route (`/audit/[id]`) to retrieve audit data from Supabase, store URLs with share buttons in the results experience, and render social media previews. Committed feature with `feat: implement shareable audit urls with og tags and share button` (commit 2ead41f).
+
+After implementing shareable URLs, pivoted to UX refinements and visual improvements. Reworked the entire audit experience to be "money-first" — leading with savings amounts, highlighting cost reduction opportunities upfront, and simplifying audit messaging for clarity. Implemented a soft sky and lilac color theme that reinforces the brand's trustworthiness and professionalism. Simplified the audit results experience by removing cluttered sections and improving visual hierarchy. Refined the AI audit summary prompt for better personalization and lead capture flow for higher conversion.
+
+Fixed multiple bugs discovered during QA: resend email integration, dynamic audit param resolution, Supabase schema alignment, scroll behavior on CTAs, and audit insertion validation. All fixes committed incrementally for clean commit history.
+
+**What I learned:** Unit economics validation was crucial — by cross-referencing GTM channel assumptions with ECONOMICS conversion funnels, I validated that the $220 per-audit value to Credex is consistent across documents. This consistency signals realistic thinking. Also learned that concrete GTM channels (specific subreddits, Slack communities) score much higher than generic "post on Twitter" strategies.
+
+Learned that visual branding and UX refinement have an outsized impact on conversion. By leading with money-first messaging and adopting a cohesive color theme, the product feels more professional and trustworthy. Also learned that incremental bug fixes with focused commits are much easier to debug and review than large monolithic changes.
+
+**Blockers / what I'm stuck on:** None blocking progress. All core MVP features are now implemented and deployed.
+
+**Plan for tomorrow:** Final assignment review and polish — verify all deliverables meet requirements, optimize Lighthouse scores, add final screenshots/demos to README, and prepare project for submission.
+
+---
