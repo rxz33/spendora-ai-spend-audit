@@ -30,6 +30,8 @@ export default function AuditResults({
     useState(false);
   const [leadSuccess, setLeadSuccess] =
     useState(false);
+  const [leadEmailSent, setLeadEmailSent] =
+    useState(false);
   const [leadError, setLeadError] =
     useState<string | null>(null);
   const [shareLoading, setShareLoading] =
@@ -93,6 +95,7 @@ export default function AuditResults({
     setLeadLoading(true);
     setLeadError(null);
     setLeadSuccess(false);
+    setLeadEmailSent(false);
 
     try {
       const response = await fetch(
@@ -129,6 +132,15 @@ export default function AuditResults({
       }
 
       setLeadSuccess(true);
+      setLeadEmailSent(
+        Boolean(data.emailSent)
+      );
+      if (data.emailSent === false) {
+        setLeadError(
+          data.error ||
+            "Lead saved, but confirmation email could not be sent."
+        );
+      }
       setLeadEmail("");
       setCompanyName("");
       setRole("");
@@ -362,7 +374,9 @@ export default function AuditResults({
 
           {leadSuccess && (
             <p className="text-sm text-green-400">
-              Lead captured. Check your inbox for the confirmation email.
+              {leadEmailSent
+                ? "Lead captured. Check your inbox for the confirmation email."
+                : "Lead captured, but the confirmation email was not sent."}
             </p>
           )}
 

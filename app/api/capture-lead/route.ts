@@ -3,9 +3,8 @@ import { getSupabaseClient } from "@/lib/supabase";
 import { Resend } from "resend";
 
 export async function POST(req: Request) {
-  const resend = new Resend(
-    process.env.RESEND_API_KEY
-  );
+  const resendApiKey =
+    process.env.RESEND_API_KEY;
 
   const supabase =
   getSupabaseClient();
@@ -62,7 +61,24 @@ export async function POST(req: Request) {
       throw error;
     }
 
-    await resend.emails.send({
+    if (!resendApiKey) {
+      return NextResponse.json(
+        {
+          success: true,
+          emailSent: false,
+          error:
+            "Lead saved, but RESEND_API_KEY is missing.",
+        },
+        { status: 200 }
+      );
+    }
+
+    const resend = new Resend(
+      resendApiKey
+    );
+
+    const { error: emailError } =
+      await resend.emails.send({
       from:
         "Spendora <onboarding@resend.dev>",
       to: email,
@@ -85,10 +101,27 @@ export async function POST(req: Request) {
           }
         </p>
       `,
-    });
+      });
+
+    if (emailError) {
+      console.error(
+        "Resend email error:",
+        emailError
+      );
+      return NextResponse.json(
+        {
+          success: true,
+          emailSent: false,
+          error:
+            "Lead saved, but confirmation email could not be sent.",
+        },
+        { status: 200 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
+      emailSent: true,
     });
   } catch (error) {
     console.error(error);
