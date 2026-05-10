@@ -73,19 +73,19 @@ export default function HomePage() {
     });
   };
   return (
-    <main className="min-h-screen bg-black text-white">
-      <section className="border-b border-white/10">
+    <main className="min-h-screen text-slate-900">
+      <section className="border-b border-sky-200/70">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <div className="max-w-4xl">
-            <p className="mb-4 inline-flex rounded-full border border-green-500/20 bg-green-500/10 px-4 py-1 text-sm text-green-400">
+            <p className="mb-4 inline-flex rounded-full border border-sky-200 bg-white/70 px-4 py-1 text-sm text-sky-700 shadow-sm">
               AI Spend Optimization Platform
             </p>
 
-            <h1 className="text-6xl font-bold leading-tight tracking-tight">
+            <h1 className="text-6xl font-bold leading-tight tracking-tight text-slate-900">
               Stop overpaying for AI tools
             </h1>
 
-            <p className="mt-6 max-w-2xl text-xl text-white/70">
+            <p className="mt-6 max-w-2xl text-xl text-slate-600">
               Analyze your AI subscriptions,
               identify wasted spend, and
               discover cheaper alternatives
@@ -95,14 +95,14 @@ export default function HomePage() {
             <div className="mt-8 flex gap-4">
               <button
                 onClick={scrollToForm}
-                className="rounded-xl bg-white px-6 py-3 font-medium text-black transition hover:bg-white/90"
+                className="rounded-xl bg-sky-500 px-6 py-3 font-medium text-white transition hover:bg-sky-600"
               >
                 Start Audit
               </button>
 
               <button
                 onClick={scrollToPricing}
-                className="rounded-xl border border-white/10 px-6 py-3 font-medium transition hover:border-white/30"
+                className="rounded-xl border border-sky-200 bg-white/70 px-6 py-3 font-medium text-slate-700 transition hover:border-sky-300 hover:bg-white"
               >
                 View Pricing Data
               </button>
@@ -121,13 +121,13 @@ export default function HomePage() {
       {/* PRICING DATA SECTION */}
       <section
         ref={pricingRef}
-        className="border-t border-white/10 bg-white/5 py-20"
+        className="border-t border-sky-200/70 bg-white/40 py-20 backdrop-blur-sm"
       >
         <div className="mx-auto max-w-6xl px-6">
-          <h2 className="mb-2 text-4xl font-bold">
+          <h2 className="mb-2 text-4xl font-bold text-slate-900">
             Pricing Data
           </h2>
-          <p className="mb-12 text-white/60">
+          <p className="mb-12 text-slate-600">
             Current pricing and plan details for all
             supported AI tools
           </p>
@@ -136,12 +136,12 @@ export default function HomePage() {
             {pricingData.map((tool) => (
               <div
                 key={tool.name}
-                className="rounded-lg border border-white/10 bg-white/5 p-6"
+                className="rounded-2xl border border-sky-200/70 bg-white/75 p-6 shadow-sm backdrop-blur-sm"
               >
-                <h3 className="text-lg font-semibold">
+                <h3 className="text-lg font-semibold text-slate-900">
                   {tool.name}
                 </h3>
-                <p className="mt-4 text-sm text-white/60">
+                <p className="mt-4 text-sm text-slate-600">
                   {tool.description}
                 </p>
                 <div className="mt-6 space-y-2">
@@ -150,10 +150,10 @@ export default function HomePage() {
                       key={plan.name}
                       className="flex justify-between text-sm"
                     >
-                      <span className="text-white/70">
+                      <span className="text-slate-600">
                         {plan.name}
                       </span>
-                      <span className="font-semibold">
+                      <span className="font-semibold text-slate-900">
                         ${plan.price}/mo
                       </span>
                     </div>

@@ -76,19 +76,6 @@ export default function AuditResults({
     );
   const isHighSavings = totalSavings >= 500;
   const isLowSavings = totalSavings < 100;
-  const heroEyebrow = isHighSavings
-    ? "High-value audit"
-    : isLowSavings
-    ? "Efficient setup"
-    : "Actionable review";
-  const heroTitle = isLowSavings
-    ? "You're spending well on AI."
-    : "Clear savings are available in your stack.";
-  const heroCopy = isHighSavings
-    ? "You have enough extra AI spend here that it is worth fixing now, not later."
-    : isLowSavings
-    ? "There are no major pricing mistakes in this setup. Your current mix looks reasonable for the team size and usage you entered."
-    : "You are not far off, but there are still a few clear ways to lower monthly spend without changing how the team works too much.";
 
   const handleShareAudit = async () => {
     setShareLoading(true);
@@ -202,225 +189,163 @@ export default function AuditResults({
   };
 
   return (
-    <div className="mt-16 space-y-8">
-      <section className="overflow-hidden rounded-[2rem] border border-cyan-400/20 bg-[radial-gradient(circle_at_top_left,_rgba(56,189,248,0.18),_transparent_32%),radial-gradient(circle_at_top_right,_rgba(34,197,94,0.18),_transparent_34%),linear-gradient(135deg,_rgba(5,10,24,0.96),_rgba(12,18,34,0.98))] shadow-[0_28px_90px_rgba(0,0,0,0.35)]">
-        <div className="border-b border-white/10 px-6 py-5 md:px-8">
-          <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-cyan-300/80">
-                Shareable audit result
-              </p>
-              <p className="mt-2 max-w-2xl text-sm text-slate-300">
-                Share this with your team when you want a simple view of what to keep, what to change, and how much money is on the table.
-              </p>
-            </div>
-
-            {!shareUrl ? (
-              <button
-                onClick={handleShareAudit}
-                disabled={shareLoading}
-                className="rounded-full border border-cyan-300/30 bg-cyan-300/12 px-5 py-2.5 text-sm font-semibold text-cyan-100 transition hover:border-cyan-200/50 hover:bg-cyan-300/18 disabled:opacity-50"
-              >
-                {shareLoading
-                  ? "Creating share link..."
-                  : "Create share link"}
-              </button>
-            ) : (
-              <div className="flex flex-col gap-3 md:min-w-[420px]">
-                <div className="flex items-center gap-2 text-sm font-medium text-emerald-300">
-                  <span className="inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
-                  Share link ready
-                </div>
-                <div className="flex flex-col gap-3 md:flex-row">
-                  <input
-                    type="text"
-                    value={shareUrl}
-                    readOnly
-                    className="min-w-0 flex-1 rounded-full border border-white/10 bg-black/35 px-4 py-2.5 text-sm text-white/80"
-                  />
-                  <button
-                    onClick={handleCopyToClipboard}
-                    className="rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-slate-200"
-                  >
-                    {shareCopied
-                      ? "Copied"
-                      : "Copy link"}
-                  </button>
-                </div>
-              </div>
-            )}
-          </div>
-        </div>
-
-        <div className="grid gap-8 px-6 py-8 md:px-8 lg:grid-cols-[1.3fr_0.9fr]">
-          <div className="space-y-6">
-            <div className="inline-flex rounded-full border border-white/10 bg-white/8 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.28em] text-slate-200">
-              {heroEyebrow}
-            </div>
-
-            <div className="space-y-4">
-              <h2 className="max-w-3xl text-4xl font-semibold tracking-tight text-white md:text-5xl">
-                {heroTitle}
-              </h2>
-              <p className="max-w-2xl text-lg leading-8 text-slate-300">
-                {heroCopy}
-              </p>
-            </div>
-
-            <div className="grid gap-4 sm:grid-cols-3">
-              <div className="rounded-[1.6rem] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-400">
-                  Monthly savings
-                </p>
-                <p className="mt-3 text-4xl font-semibold text-emerald-300">
-                  {formatCurrency(totalSavings)}
-                </p>
-              </div>
-              <div className="rounded-[1.6rem] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-400">
-                  Annual savings
-                </p>
-                <p className="mt-3 text-4xl font-semibold text-white">
-                  {formatCurrency(annualSavings)}
-                </p>
-              </div>
-              <div className="rounded-[1.6rem] border border-white/10 bg-white/6 p-5 backdrop-blur-sm">
-                <p className="text-xs uppercase tracking-[0.28em] text-slate-400">
-                  Tools reviewed
-                </p>
-                <p className="mt-3 text-4xl font-semibold text-white">
-                  {results.length}
-                </p>
-                <p className="mt-2 text-sm text-slate-400">
-                  {optimizedTools.length} flagged for action
-                </p>
-              </div>
-            </div>
-          </div>
-
-          <div className="rounded-[1.8rem] border border-white/10 bg-black/30 p-6 backdrop-blur-sm">
-            <p className="text-xs font-semibold uppercase tracking-[0.28em] text-slate-400">
-              Audit snapshot
+    <div className="mt-12 space-y-6 text-slate-900">
+      <section className="rounded-3xl border border-sky-200/70 bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(245,243,255,0.98))] p-6 shadow-sm md:p-8">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+          <div className="max-w-3xl">
+            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+              Audit Results
             </p>
+            <h2 className="mt-3 text-4xl font-bold leading-tight text-slate-900 md:text-5xl">
+              {isLowSavings
+                ? "Your AI spend looks healthy"
+                : `You could save ${formatCurrency(
+                    totalSavings
+                  )}/month`}
+            </h2>
+            <p className="mt-4 text-lg leading-8 text-slate-600">
+              {isHighSavings
+                ? "This stack has enough recurring waste to justify taking action now."
+                : isLowSavings
+                ? "There are no major pricing mistakes here. Your current setup looks reasonable for the team details you entered."
+                : "There are a few clear ways to lower recurring spend without making the stack harder to use."}
+            </p>
+          </div>
 
-            {biggestOpportunity ? (
-              <div className="mt-5 space-y-5">
-                <div>
-                  <p className="text-sm text-slate-400">
-                    Biggest savings opportunity
-                  </p>
-                  <h3 className="mt-2 text-2xl font-semibold text-white">
-                    {biggestOpportunity.currentTool}
-                  </h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-300">
-                    {biggestOpportunity.recommendation}
-                  </p>
-                </div>
-
-                <div className="rounded-[1.4rem] border border-emerald-400/20 bg-emerald-400/8 p-5">
-                  <p className="text-xs uppercase tracking-[0.26em] text-emerald-200/70">
-                    Top savings lever
-                  </p>
-                  <p className="mt-3 text-4xl font-semibold text-emerald-300">
-                    {formatCurrency(
-                      biggestOpportunity.monthlySavings
-                    )}
-                    <span className="ml-2 text-base font-medium text-emerald-100/80">
-                      per month
-                    </span>
-                  </p>
-                </div>
-
-                <div className="space-y-3 text-sm leading-7 text-slate-300">
-                  <div className="flex items-start justify-between gap-4 border-b border-white/10 pb-3">
-                    <span className="text-slate-400">
-                      Current spend
-                    </span>
-                    <span className="font-medium text-white">
-                      {formatCurrency(
-                        biggestOpportunity.currentSpend
-                      )}
-                      /mo
-                    </span>
-                  </div>
-                  <div className="flex items-start justify-between gap-4">
-                    <span className="text-slate-400">
-                      Current plan
-                    </span>
-                    <span className="text-right font-medium text-white">
-                      {biggestOpportunity.currentPlan}
-                    </span>
-                  </div>
-                </div>
-              </div>
-            ) : (
-              <div className="mt-5 rounded-[1.4rem] border border-white/10 bg-white/6 p-5">
-                <p className="text-lg font-semibold text-white">
-                  No major waste detected
-                </p>
-                <p className="mt-2 text-sm leading-7 text-slate-300">
-                  This stack looks healthy right now. The best next step is to keep an eye on pricing changes instead of forcing a tool switch that will not save much.
-                </p>
-              </div>
-            )}
+          <div className="grid w-full gap-4 sm:grid-cols-3 lg:max-w-xl">
+            <div className="rounded-2xl border border-sky-200/70 bg-white/70 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                Monthly
+              </p>
+              <p className="mt-3 text-3xl font-bold text-sky-600">
+                {formatCurrency(totalSavings)}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-sky-200/70 bg-white/70 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                Annual
+              </p>
+              <p className="mt-3 text-3xl font-bold text-violet-600">
+                {formatCurrency(annualSavings)}
+              </p>
+            </div>
+            <div className="rounded-2xl border border-sky-200/70 bg-white/70 p-5">
+              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                Tools flagged
+              </p>
+              <p className="mt-3 text-3xl font-bold text-slate-900">
+                {optimizedTools.length}
+              </p>
+            </div>
           </div>
         </div>
+
+        {biggestOpportunity && (
+          <div className="mt-6 rounded-2xl border border-sky-200/70 bg-white/70 p-5">
+            <p className="text-sm text-slate-500">
+              Biggest savings opportunity
+            </p>
+            <div className="mt-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+              <div>
+                <p className="text-xl font-semibold text-slate-900">
+                  {biggestOpportunity.currentTool}
+                </p>
+                <p className="mt-1 text-slate-600">
+                  {biggestOpportunity.recommendation}
+                </p>
+              </div>
+              <p className="text-2xl font-bold text-sky-600">
+                {formatCurrency(
+                  biggestOpportunity.monthlySavings
+                )}
+                /mo
+              </p>
+            </div>
+          </div>
+        )}
+      </section>
+
+      <section className="rounded-3xl border border-sky-200/70 bg-white/75 p-6 shadow-sm md:p-8">
+        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+          <div>
+            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+              Share Audit
+            </p>
+            <h3 className="mt-2 text-2xl font-semibold text-slate-900">
+              Save this result as a public link
+            </h3>
+          </div>
+
+          {!shareUrl && (
+            <button
+              onClick={handleShareAudit}
+              disabled={shareLoading}
+              className="rounded-xl border border-sky-200 bg-white px-5 py-3 font-medium text-slate-700 transition hover:border-sky-300 disabled:opacity-50"
+            >
+              {shareLoading
+                ? "Creating link..."
+                : "Create share link"}
+            </button>
+          )}
+        </div>
+
+        {shareUrl && (
+          <div className="mt-5 flex flex-col gap-3 md:flex-row md:items-center">
+            <input
+              type="text"
+              value={shareUrl}
+              readOnly
+              className="flex-1 rounded-xl border border-sky-200 bg-white px-4 py-3 text-slate-700"
+            />
+            <button
+              onClick={handleCopyToClipboard}
+              className="rounded-xl bg-violet-200 px-5 py-3 font-medium text-violet-900 transition hover:bg-violet-300"
+            >
+              {shareCopied ? "Copied" : "Copy link"}
+            </button>
+          </div>
+        )}
       </section>
 
       {isHighSavings && (
-        <section className="overflow-hidden rounded-[2rem] border border-emerald-400/25 bg-[linear-gradient(135deg,_rgba(6,78,59,0.92),_rgba(6,46,32,0.94))] shadow-[0_24px_70px_rgba(4,120,87,0.18)]">
-          <div className="grid gap-6 px-6 py-8 md:px-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
-            <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-emerald-200/75">
-                Capture the savings
-              </p>
-              <h3 className="mt-3 text-3xl font-semibold text-white md:text-4xl">
-                Credex should be part of this conversation.
-              </h3>
-              <p className="mt-4 max-w-2xl text-lg leading-8 text-emerald-50/88">
-                At {formatCurrency(totalSavings)} per month, this is big enough to treat as a real procurement problem. Credex can help you turn these savings ideas into actual contract and pricing changes.
-              </p>
-            </div>
-
-            <div className="rounded-[1.7rem] border border-white/10 bg-black/22 p-6">
-              <p className="text-sm font-medium text-emerald-100">
-                Why involve Credex
-              </p>
-              <div className="mt-4 space-y-3 text-sm leading-7 text-emerald-50/85">
-                <p>The monthly savings are large enough to be worth acting on.</p>
-                <p>You may be able to negotiate better pricing or cut overlapping tools.</p>
-                <p>This audit already shows where the biggest savings are.</p>
-              </div>
-              <a
-                href="https://credex.rocks"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-6 inline-flex rounded-full bg-white px-5 py-3 text-sm font-semibold text-emerald-950 transition hover:bg-emerald-50"
-              >
-                Talk to Credex
-              </a>
-            </div>
-          </div>
+        <section className="rounded-3xl border border-violet-200 bg-[linear-gradient(135deg,rgba(224,242,254,0.7),rgba(237,233,254,0.9))] p-6 shadow-sm md:p-8">
+          <p className="text-sm uppercase tracking-[0.28em] text-violet-700/70">
+            High-Savings Case
+          </p>
+          <h3 className="mt-2 text-3xl font-semibold text-slate-900">
+            Credex can help capture these savings
+          </h3>
+          <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-600">
+            At {formatCurrency(totalSavings)} per month, this is more than a small cleanup. It is worth looking at vendor consolidation, better pricing, and procurement support.
+          </p>
+          <a
+            href="https://credex.rocks"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-6 inline-block rounded-xl bg-sky-500 px-5 py-3 font-medium text-white transition hover:bg-sky-600"
+          >
+            Talk to Credex
+          </a>
         </section>
       )}
 
       <section className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <div className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(15,23,42,0.94),_rgba(7,10,20,0.98))] p-6 shadow-[0_18px_60px_rgba(0,0,0,0.32)] md:p-8">
-          <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+        <div className="rounded-3xl border border-sky-200/70 bg-white/75 p-6 shadow-sm md:p-8">
+          <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-[0.32em] text-slate-400">
-                Per-tool breakdown
+              <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+                Per-Tool Breakdown
               </p>
-              <h3 className="mt-2 text-3xl font-semibold text-white">
-                Per-tool breakdown
+              <h3 className="mt-2 text-2xl font-semibold text-slate-900">
+                What you pay, what to change, and why
               </h3>
             </div>
-            <p className="max-w-xl text-sm leading-7 text-slate-400">
-              For each tool, we show what you pay now, what we would change, and how much that could save.
+            <p className="max-w-xl text-sm leading-7 text-slate-600">
+              Each row shows the current setup, the recommended next step, and the savings tied to that change.
             </p>
           </div>
 
-          <div className="mt-8 grid gap-5">
+          <div className="mt-6 space-y-4">
             {results.map((result, index) => {
               const hasSavings =
                 result.monthlySavings > 0;
@@ -428,91 +353,82 @@ export default function AuditResults({
               return (
                 <article
                   key={index}
-                  className="rounded-[1.7rem] border border-white/10 bg-white/[0.045] p-5 backdrop-blur-sm md:p-6"
+                  className="rounded-2xl border border-sky-200/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(245,243,255,0.9))] p-5"
                 >
-                  <div className="flex flex-col gap-6 xl:flex-row xl:items-start xl:justify-between">
-                    <div className="space-y-5">
-                      <div className="flex flex-wrap items-center gap-3">
-                        <span
-                          className={`inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] ${
-                            hasSavings
-                              ? "bg-emerald-400/12 text-emerald-300"
-                              : "bg-slate-400/10 text-slate-300"
-                          }`}
-                        >
-                          {hasSavings
-                            ? "Action flagged"
-                            : "Looks reasonable"}
-                        </span>
-                        <h4 className="text-2xl font-semibold text-white">
+                  <div className="flex flex-col gap-5">
+                    <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+                      <div>
+                        <h4 className="text-xl font-semibold text-slate-900">
                           {result.currentTool}
                         </h4>
+                        <p className="mt-1 text-slate-600">
+                          Current plan: {result.currentPlan}
+                        </p>
                       </div>
 
-                      <div className="grid gap-3 md:grid-cols-3">
-                        <div className="rounded-[1.3rem] border border-white/10 bg-black/20 p-4">
-                          <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
-                            You pay now
-                          </p>
-                          <p className="mt-3 text-lg font-semibold text-white">
-                            {result.currentPlan}
-                          </p>
-                          <p className="mt-1 text-sm text-slate-400">
-                            {formatCurrency(
-                              result.currentSpend
-                            )}
-                            /mo
-                          </p>
-                        </div>
-
-                        <div className="rounded-[1.3rem] border border-white/10 bg-black/20 p-4">
-                          <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
-                            We suggest
-                          </p>
-                          <p className="mt-3 text-lg font-semibold text-white">
-                            {result.recommendation}
-                          </p>
-                        </div>
-
-                        <div
-                          className={`rounded-[1.3rem] border p-4 ${
-                            hasSavings
-                              ? "border-emerald-400/20 bg-emerald-400/10"
-                              : "border-slate-500/20 bg-slate-500/10"
-                          }`}
-                        >
-                          <p className="text-xs uppercase tracking-[0.24em] text-slate-500">
-                            You could save
-                          </p>
-                          <p
-                            className={`mt-3 text-lg font-semibold ${
-                              hasSavings
-                                ? "text-emerald-300"
-                                : "text-slate-200"
-                            }`}
-                          >
-                            {formatCurrency(
+                      <div
+                        className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${
+                          hasSavings
+                            ? "bg-sky-100 text-sky-700"
+                            : "bg-violet-100 text-violet-700"
+                        }`}
+                      >
+                        {hasSavings
+                          ? `${formatCurrency(
                               result.monthlySavings
-                            )}
-                            /mo
-                          </p>
-                          <p className="mt-1 text-sm text-slate-400">
-                            {formatCurrency(
-                              result.annualSavings
-                            )}{" "}
-                            annually
-                          </p>
-                        </div>
+                            )}/mo savings`
+                          : "No major savings found"}
+                      </div>
+                    </div>
+
+                    <div className="grid gap-3 md:grid-cols-3">
+                      <div className="rounded-xl border border-sky-100 bg-white p-4">
+                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                          You pay now
+                        </p>
+                        <p className="mt-2 text-lg font-semibold text-slate-900">
+                          {formatCurrency(
+                            result.currentSpend
+                          )}
+                          /mo
+                        </p>
                       </div>
 
-                      <div className="rounded-[1.3rem] border border-white/10 bg-black/22 px-4 py-4">
-                        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-500">
-                          Why
+                      <div className="rounded-xl border border-sky-100 bg-white p-4">
+                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                          We suggest
                         </p>
-                        <p className="mt-3 max-w-4xl text-base leading-7 text-slate-300">
-                          {result.reason}
+                        <p className="mt-2 text-lg font-semibold text-slate-900">
+                          {result.recommendation}
                         </p>
                       </div>
+
+                      <div className="rounded-xl border border-sky-100 bg-white p-4">
+                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                          You could save
+                        </p>
+                        <p className="mt-2 text-lg font-semibold text-sky-600">
+                          {formatCurrency(
+                            result.monthlySavings
+                          )}
+                          /mo
+                        </p>
+                        <p className="mt-1 text-sm text-slate-500">
+                          {formatCurrency(
+                            result.annualSavings
+                          )}{" "}
+                          annually
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="rounded-xl border border-sky-100 bg-white p-4">
+                      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                        Why
+                      </p>
+                      <p className="mt-2 leading-7 text-slate-600">
+                        {result.reason}
+                      </p>
                     </div>
                   </div>
                 </article>
@@ -522,34 +438,30 @@ export default function AuditResults({
         </div>
 
         <div className="space-y-6">
-          <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(17,24,39,0.96),_rgba(10,14,25,0.98))] p-6 shadow-[0_18px_60px_rgba(0,0,0,0.28)] md:p-7">
-            <div className="flex items-center gap-3">
-              <span className="inline-flex h-3 w-3 rounded-full bg-cyan-300" />
-              <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
-                AI summary
-              </p>
-            </div>
-
-            <p className="mt-5 text-lg leading-8 text-slate-200">
+          <section className="rounded-3xl border border-sky-200/70 bg-white/75 p-6 shadow-sm md:p-8">
+            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+              AI Summary
+            </p>
+            <p className="mt-4 text-lg leading-8 text-slate-600">
               {summary}
             </p>
           </section>
 
-          <section className="rounded-[2rem] border border-white/10 bg-[linear-gradient(180deg,_rgba(14,18,29,0.98),_rgba(8,11,21,1))] p-6 shadow-[0_18px_60px_rgba(0,0,0,0.28)] md:p-7">
-            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+          <section className="rounded-3xl border border-sky-200/70 bg-white/75 p-6 shadow-sm md:p-8">
+            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
               {isHighSavings
-                ? "Credex follow-up"
-                : "Notify me when the stack changes"}
+                ? "Follow-Up"
+                : "Stay Updated"}
             </p>
-            <h3 className="mt-3 text-2xl font-semibold text-white">
+            <h3 className="mt-2 text-2xl font-semibold text-slate-900">
               {isHighSavings
-                ? "Want help acting on these savings?"
-                : "Want updates when this changes?"}
+                ? "Want help acting on this?"
+                : "Want updates when better savings appear?"}
             </h3>
-            <p className="mt-4 text-base leading-7 text-slate-300">
+            <p className="mt-4 leading-7 text-slate-600">
               {isHighSavings
-                ? "Leave your work email and we will send the audit summary. Credex may also reach out if this level of savings looks worth pursuing."
-                : "Leave your email and we will send this audit plus future updates if better savings options show up later."}
+                ? "Leave your work email and we will send this audit now. Credex may also reach out if this looks like a strong fit for procurement support."
+                : "Leave your email and we will send this audit plus future updates if pricing changes create better savings opportunities."}
             </p>
 
             <div className="mt-6 grid gap-4">
@@ -560,7 +472,7 @@ export default function AuditResults({
                 onChange={(e) =>
                   setLeadEmail(e.target.value)
                 }
-                className="w-full rounded-[1.2rem] border border-white/10 bg-black/30 px-4 py-3 text-white placeholder:text-slate-500"
+                className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
               />
 
               <div className="grid gap-4 md:grid-cols-2">
@@ -573,7 +485,7 @@ export default function AuditResults({
                       e.target.value
                     )
                   }
-                  className="w-full rounded-[1.2rem] border border-white/10 bg-black/30 px-4 py-3 text-white placeholder:text-slate-500"
+                  className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
                 />
                 <input
                   type="text"
@@ -582,19 +494,30 @@ export default function AuditResults({
                   onChange={(e) =>
                     setRole(e.target.value)
                   }
-                  className="w-full rounded-[1.2rem] border border-white/10 bg-black/30 px-4 py-3 text-white placeholder:text-slate-500"
+                  className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
                 />
               </div>
 
               <input
                 type="number"
-                min="1"
+                min="0"
                 placeholder="Team size (optional)"
                 value={teamSize}
                 onChange={(e) =>
-                  setTeamSize(e.target.value)
+                  setTeamSize(
+                    e.target.value === ""
+                      ? ""
+                      : String(
+                          Math.max(
+                            Number(
+                              e.target.value
+                            ),
+                            0
+                          )
+                        )
+                  )
                 }
-                className="w-full rounded-[1.2rem] border border-white/10 bg-black/30 px-4 py-3 text-white placeholder:text-slate-500"
+                className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
               />
 
               <input
@@ -615,21 +538,21 @@ export default function AuditResults({
               <button
                 onClick={handleLeadCapture}
                 disabled={leadLoading}
-                className={`rounded-full px-5 py-3 text-sm font-semibold transition disabled:opacity-50 ${
+                className={`rounded-xl px-5 py-3 font-medium transition disabled:opacity-50 ${
                   isHighSavings
-                    ? "bg-emerald-300 text-emerald-950 hover:bg-emerald-200"
-                    : "bg-white text-slate-950 hover:bg-slate-200"
+                    ? "bg-sky-500 text-white hover:bg-sky-600"
+                    : "bg-violet-200 text-violet-900 hover:bg-violet-300"
                 }`}
               >
                 {leadLoading
                   ? "Submitting..."
                   : isHighSavings
-                  ? "Request Credex follow-up"
-                  : "Notify me later"}
+                  ? "Request follow-up"
+                  : "Notify me"}
               </button>
 
               {leadSuccess && (
-                <p className="text-sm text-emerald-300">
+                <p className="text-sm text-sky-600">
                   {leadEmailSent
                     ? "Lead captured. The confirmation email is on its way."
                     : "Lead captured, but the confirmation email was not sent."}
@@ -637,7 +560,7 @@ export default function AuditResults({
               )}
 
               {leadError && (
-                <p className="text-sm text-amber-300">
+                <p className="text-sm text-violet-700">
                   {leadError}
                 </p>
               )}

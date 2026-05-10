@@ -101,19 +101,19 @@ export default async function AuditPage({
 
   if (!audit) {
     return (
-      <main className="min-h-screen bg-black text-white">
+      <main className="min-h-screen text-slate-900">
         <div className="mx-auto max-w-6xl px-6 py-24">
           <div className="text-center">
-            <h1 className="text-4xl font-bold">
+            <h1 className="text-4xl font-bold text-slate-900">
               Audit Not Found
             </h1>
-            <p className="mt-4 text-white/70">
+            <p className="mt-4 text-slate-600">
               This audit link may have expired or is
               invalid.
             </p>
             <Link
               href="/"
-              className="mt-8 inline-block rounded-lg bg-green-500 px-6 py-3 font-medium text-black hover:bg-green-400"
+              className="mt-8 inline-block rounded-lg bg-sky-500 px-6 py-3 font-medium text-white hover:bg-sky-600"
             >
               Start a New Audit
             </Link>
@@ -129,13 +129,13 @@ export default async function AuditPage({
     audit.monthly_savings < 100;
 
   return (
-    <main className="min-h-screen bg-black text-white">
-      <section className="border-b border-white/10">
+    <main className="min-h-screen text-slate-900">
+      <section className="border-b border-sky-200/70">
         <div className="mx-auto max-w-6xl px-6 py-12">
-          <h1 className="text-4xl font-bold">
+          <h1 className="text-4xl font-bold text-slate-900">
             Your AI Spend Audit Results
           </h1>
-          <p className="mt-2 text-white/60">
+          <p className="mt-2 text-slate-600">
             Shared audit from Spendora
           </p>
         </div>
@@ -146,21 +146,21 @@ export default async function AuditPage({
         <div
           className={`rounded-2xl border p-8 ${
             isHighSavings
-              ? "border-green-500/30 bg-green-500/10"
+              ? "border-violet-200 bg-[linear-gradient(135deg,rgba(224,242,254,0.72),rgba(237,233,254,0.9))]"
               : isLowSavings
-              ? "border-blue-500/20 bg-blue-500/10"
-              : "border-white/10 bg-white/5"
+              ? "border-sky-200/70 bg-white/75"
+              : "border-sky-200/70 bg-white/75"
           }`}
         >
           <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
             <div>
-              <h2 className="text-3xl font-bold">
+              <h2 className="text-3xl font-bold text-slate-900">
                 {isLowSavings
                   ? "Your AI Spend Looks Healthy"
                   : "Estimated Savings Opportunity"}
               </h2>
 
-              <p className="mt-3 max-w-2xl text-white/60">
+              <p className="mt-3 max-w-2xl text-slate-600">
                 {isLowSavings
                   ? "This team's AI tooling stack appears operationally efficient."
                   : "Optimization opportunities detected across subscriptions and vendor alternatives."}
@@ -168,11 +168,11 @@ export default async function AuditPage({
             </div>
 
             <div className="text-left md:text-right">
-              <p className="text-5xl font-bold text-green-400">
+              <p className="text-5xl font-bold text-sky-600">
                 ${audit.monthly_savings}/mo
               </p>
 
-              <p className="mt-2 text-white/60">
+              <p className="mt-2 text-slate-600">
                 ${audit.annual_savings.toFixed(0)} annually
               </p>
             </div>
@@ -181,7 +181,7 @@ export default async function AuditPage({
 
         {/* RECOMMENDATIONS SECTION */}
         <div className="mt-12">
-          <h3 className="text-2xl font-bold">
+          <h3 className="text-2xl font-bold text-slate-900">
             Per-Tool Breakdown
           </h3>
 
@@ -189,20 +189,20 @@ export default async function AuditPage({
             {audit.tools.map((tool, idx) => (
               <div
                 key={idx}
-                className="rounded-lg border border-white/10 bg-white/5 p-6"
+                className="rounded-2xl border border-sky-200/70 bg-white/75 p-6 shadow-sm"
               >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <h4 className="font-semibold">
+                    <h4 className="font-semibold text-slate-900">
                       {tool.tool} ({tool.plan})
                     </h4>
 
-                    <p className="mt-2 text-white/70">
+                    <p className="mt-2 text-slate-600">
                       {tool.recommendation}
                     </p>
 
-                    <p className="mt-3 text-sm text-white/50">
-                      <span className="font-medium text-white/70">
+                    <p className="mt-3 text-sm text-slate-500">
+                      <span className="font-medium text-slate-700">
                         Reasoning:
                       </span>{" "}
                       {tool.reason}
@@ -210,12 +210,12 @@ export default async function AuditPage({
                   </div>
 
                   <div className="ml-6 text-right">
-                    <p className="text-xl font-bold text-green-400">
+                    <p className="text-xl font-bold text-sky-600">
                       ${tool.monthlySavings}/mo
                     </p>
-                    <p className="text-sm text-white/60">
+                    <p className="text-sm text-slate-500">
                       Current:{" "}
-                      <span className="text-white">
+                      <span className="text-slate-900">
                         ${tool.currentSpend}
                       </span>
                     </p>
@@ -228,11 +228,11 @@ export default async function AuditPage({
 
         {/* AI SUMMARY SECTION */}
         {audit.summary && (
-          <div className="mt-12 rounded-lg border border-white/10 bg-white/5 p-6">
-            <h3 className="text-lg font-semibold">
+          <div className="mt-12 rounded-2xl border border-sky-200/70 bg-white/75 p-6 shadow-sm">
+            <h3 className="text-lg font-semibold text-slate-900">
               AI Analysis Summary
             </h3>
-            <p className="mt-4 leading-relaxed text-white/70">
+            <p className="mt-4 leading-relaxed text-slate-600">
               {audit.summary}
             </p>
           </div>
@@ -240,19 +240,19 @@ export default async function AuditPage({
 
         {/* CTA SECTION */}
         {isHighSavings && (
-          <div className="mt-12 rounded-lg border border-green-500/20 bg-green-500/10 p-8">
-            <h3 className="text-2xl font-bold text-green-400">
+          <div className="mt-12 rounded-2xl border border-violet-200 bg-[linear-gradient(135deg,rgba(224,242,254,0.72),rgba(237,233,254,0.9))] p-8 shadow-sm">
+            <h3 className="text-2xl font-bold text-slate-900">
               Significant Savings Opportunity
             </h3>
 
-            <p className="mt-3 text-white/70">
+            <p className="mt-3 text-slate-600">
               Teams saving more than $500/month often benefit
               from centralized procurement, vendor
               consolidation, and negotiated enterprise pricing
               through Credex.
             </p>
 
-            <p className="mt-4 text-sm text-white/60">
+            <p className="mt-4 text-sm text-slate-500">
               Get discounted AI infrastructure credits from
               Credex and capture more of these savings.
             </p>
@@ -261,7 +261,7 @@ export default async function AuditPage({
               href="https://credex.rocks"
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-block rounded-lg bg-green-500 px-6 py-3 font-medium text-black transition hover:bg-green-400"
+              className="mt-6 inline-block rounded-lg bg-sky-500 px-6 py-3 font-medium text-white transition hover:bg-sky-600"
             >
               Learn About Credex →
             </a>
@@ -269,14 +269,14 @@ export default async function AuditPage({
         )}
 
         {/* FOOTER */}
-        <div className="mt-12 border-t border-white/10 pt-8 text-center text-white/60">
+        <div className="mt-12 border-t border-sky-200/70 pt-8 text-center text-slate-600">
           <p>
             This audit was generated by Spendora, a free AI
             spend optimization tool.
           </p>
           <Link
             href="/"
-            className="mt-4 inline-block text-green-400 hover:underline"
+            className="mt-4 inline-block text-sky-600 hover:underline"
           >
             Run your own audit →
           </Link>
