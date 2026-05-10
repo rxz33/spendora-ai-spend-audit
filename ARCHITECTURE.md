@@ -36,13 +36,23 @@ C --> D[Savings Analysis]
 
 D --> E[Recommendation Layer]
 
-E --> F[Executive Summary]
+E --> F[AI Summary via Groq API]
 
 F --> G[Results Dashboard]
 
-G --> H[Lead Capture / Share Flow]
+G --> H{Email Capture?}
 
-H --> I[Supabase Planned Persistence]
+H -->|Yes| I[Supabase Lead Storage]
+
+H -->|No| J[Shareable Audit URL]
+
+I --> K[Transactional Email via Resend]
+
+J --> L[Public Audit Page with OG Tags]
+
+K --> M[High-Savings: Credex CTA]
+
+L --> M
 ```
 
 ---
