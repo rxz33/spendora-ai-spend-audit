@@ -29,7 +29,6 @@ export async function POST(req: Request) {
           tools: body.tools,
           monthly_savings: body.monthlySavings,
           annual_savings: body.annualSavings,
-          total_recommendations: body.tools.length,
           summary: body.summary,
         },
       ])
