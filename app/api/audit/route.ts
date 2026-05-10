@@ -15,10 +15,17 @@ interface AuditData {
   summary: string;
 }
 
+const AUDIT_LINK_TTL_DAYS = 30;
+
 // POST: Store a new audit
 export async function POST(req: Request) {
   try {
     const body: AuditData = await req.json();
+    const expiresAt = new Date();
+    expiresAt.setDate(
+      expiresAt.getDate() +
+        AUDIT_LINK_TTL_DAYS
+    );
 
     const supabase = getSupabaseClient();
 
@@ -29,7 +36,10 @@ export async function POST(req: Request) {
           tools: body.tools,
           monthly_savings: body.monthlySavings,
           annual_savings: body.annualSavings,
+          total_recommendations:
+            body.tools.length,
           summary: body.summary,
+          expires_at: expiresAt.toISOString(),
         },
       ])
       .select("id")
