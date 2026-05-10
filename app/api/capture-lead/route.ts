@@ -25,9 +25,20 @@ export async function POST(req: Request) {
       email,
       companyName,
       role,
+      teamSize,
       monthlySavings,
       annualSavings,
     } = body;
+
+    if (!email) {
+      return NextResponse.json(
+        { error: "Email is required" },
+        { status: 400 }
+      );
+    }
+
+    const isHighSavings =
+      Number(monthlySavings) >= 500;
 
     const { error } = await supabase
       .from("audit_leads")
@@ -36,6 +47,10 @@ export async function POST(req: Request) {
           email,
           company_name: companyName,
           role,
+          team_size:
+            typeof teamSize === "number"
+              ? teamSize
+              : null,
           monthly_savings:
             monthlySavings,
           annual_savings:
@@ -63,8 +78,11 @@ export async function POST(req: Request) {
         </p>
 
         <p>
-          We'll notify you as new optimization
-          opportunities become available.
+          ${
+            isHighSavings
+              ? "Your audit falls into a high-savings range, so Credex may reach out with procurement or vendor consolidation guidance."
+              : "We'll notify you as new optimization opportunities become available."
+          }
         </p>
       `,
     });

@@ -1,4 +1,4 @@
-# Spendora — AI Spend Audit
+# Spendora - AI Spend Audit
 
 ## Live Demo
 
@@ -23,7 +23,10 @@ Pricing references and vendor research are documented in `PRICING_DATA.md`.
 - Deterministic audit engine
 - Savings opportunity analysis
 - Executive summary generation
-- Honest “already optimized” recommendation state
+- Lead capture with Supabase storage
+- Transactional audit confirmation emails via Resend
+- Honeypot-based abuse protection on lead capture
+- Honest "already optimized" recommendation state
 - Credex CTA for high-savings accounts
 - Local persistence using localStorage
 - Automated testing with Vitest
@@ -90,6 +93,16 @@ npm run test
 
 The application is deployed on Vercel with automated CI checks using GitHub Actions.
 
+## Abuse Protection
+
+Lead capture uses a hidden honeypot field for basic abuse protection.
+
+Why this choice:
+- lowest-friction option for an MVP lead form
+- avoids CAPTCHA-related conversion drop-off
+- simple to maintain with no third-party widget dependency
+- appropriate for modest early-stage traffic and spam risk
+
 ---
 
 ## Key Decisions & Trade-offs
@@ -108,7 +121,7 @@ The application is deployed on Vercel with automated CI checks using GitHub Acti
 
 **Why:** Lower operational complexity, instant load, works offline. For a lead-gen tool where we capture emails *after* value is shown, we don't need to sync form state server-side until commitment.
 
-**Trade-off:** Users can't sync across devices. But the flow is: form → audit → email capture (at which point we have the data). This fits the product model.
+**Trade-off:** Users can't sync across devices. But the flow is: form -> audit -> email capture (at which point we have the data). This fits the product model.
 
 ---
 
@@ -133,7 +146,7 @@ The application is deployed on Vercel with automated CI checks using GitHub Acti
 ### 5. **Honest "Already Optimized" UX Over Fake Savings**
 **Decision:** If a team is spending <$100/month or already on optimal plans, we say so instead of manufacturing savings.
 
-**Why:** Assignment emphasized entrepreneurial thinking = building trust. Fake savings destroy credibility. Long-term, honest audits → better Credex conversions.
+**Why:** Assignment emphasized entrepreneurial thinking = building trust. Fake savings destroy credibility. Long-term, honest audits -> better Credex conversions.
 
 **Trade-off:** Lower conversion rate on this segment. But higher trust and better product positioning.
 

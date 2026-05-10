@@ -19,6 +19,19 @@ export default function AuditResults({
   results: AuditResult[];
   summary: string;
 }) {
+  const [leadEmail, setLeadEmail] =
+    useState("");
+  const [companyName, setCompanyName] =
+    useState("");
+  const [role, setRole] = useState("");
+  const [teamSize, setTeamSize] = useState("");
+  const [website, setWebsite] = useState("");
+  const [leadLoading, setLeadLoading] =
+    useState(false);
+  const [leadSuccess, setLeadSuccess] =
+    useState(false);
+  const [leadError, setLeadError] =
+    useState<string | null>(null);
   const [shareLoading, setShareLoading] =
     useState(false);
   const [shareUrl, setShareUrl] = useState<
@@ -73,6 +86,62 @@ export default function AuditResults({
         () => setShareCopied(false),
         2000
       );
+    }
+  };
+
+  const handleLeadCapture = async () => {
+    setLeadLoading(true);
+    setLeadError(null);
+    setLeadSuccess(false);
+
+    try {
+      const response = await fetch(
+        "/api/capture-lead",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type":
+              "application/json",
+          },
+          body: JSON.stringify({
+            email: leadEmail,
+            companyName,
+            role,
+            teamSize:
+              teamSize === ""
+                ? null
+                : Number(teamSize),
+            monthlySavings: totalSavings,
+            annualSavings,
+            website,
+          }),
+        }
+      );
+
+      const data =
+        await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.error ||
+            "Failed to capture lead"
+        );
+      }
+
+      setLeadSuccess(true);
+      setLeadEmail("");
+      setCompanyName("");
+      setRole("");
+      setTeamSize("");
+      setWebsite("");
+    } catch (error) {
+      setLeadError(
+        error instanceof Error
+          ? error.message
+          : "Failed to capture lead"
+      );
+    } finally {
+      setLeadLoading(false);
     }
   };
 
@@ -199,20 +268,110 @@ export default function AuditResults({
               We&apos;ll notify you when pricing changes or new optimization
               opportunities become available for your AI stack.
             </p>
-
-            <div className="mt-4 flex flex-col gap-3 md:flex-row">
-              <input
-                type="email"
-                placeholder="Enter your work email"
-                className="w-full rounded-lg bg-black p-3"
-              />
-
-              <button className="rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-white/90">
-                Notify Me
-              </button>
-            </div>
           </div>
         )}
+      </div>
+
+      <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+        <p className="text-sm uppercase tracking-wide text-white/40">
+          Lead Capture
+        </p>
+
+        <h3 className="mt-2 text-2xl font-semibold">
+          {isHighSavings
+            ? "Get Follow-Up From Credex"
+            : "Get Audit Updates"}
+        </h3>
+
+        <p className="mt-3 max-w-3xl text-white/60">
+          {isHighSavings
+            ? "Share your work email and optional company details. We&apos;ll send your audit confirmation, and Credex may reach out for high-savings cases."
+            : "Share your work email to receive your audit confirmation and future optimization updates. Company name, role, and team size are optional."}
+        </p>
+
+        <div className="mt-6 grid gap-4 md:grid-cols-2">
+          <input
+            type="email"
+            placeholder="Work email"
+            value={leadEmail}
+            onChange={(e) =>
+              setLeadEmail(e.target.value)
+            }
+            className="w-full rounded-lg bg-black p-3"
+          />
+
+          <input
+            type="text"
+            placeholder="Company name (optional)"
+            value={companyName}
+            onChange={(e) =>
+              setCompanyName(
+                e.target.value
+              )
+            }
+            className="w-full rounded-lg bg-black p-3"
+          />
+
+          <input
+            type="text"
+            placeholder="Role (optional)"
+            value={role}
+            onChange={(e) =>
+              setRole(e.target.value)
+            }
+            className="w-full rounded-lg bg-black p-3"
+          />
+
+          <input
+            type="number"
+            min="1"
+            placeholder="Team size (optional)"
+            value={teamSize}
+            onChange={(e) =>
+              setTeamSize(e.target.value)
+            }
+            className="w-full rounded-lg bg-black p-3"
+          />
+
+          <input
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            aria-hidden="true"
+            placeholder="Leave blank"
+            value={website}
+            onChange={(e) =>
+              setWebsite(e.target.value)
+            }
+            className="hidden"
+          />
+        </div>
+
+        <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center">
+          <button
+            onClick={handleLeadCapture}
+            disabled={leadLoading}
+            className="rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-white/90 disabled:opacity-50"
+          >
+            {leadLoading
+              ? "Submitting..."
+              : isHighSavings
+              ? "Request Follow-Up"
+              : "Notify Me"}
+          </button>
+
+          {leadSuccess && (
+            <p className="text-sm text-green-400">
+              Lead captured. Check your inbox for the confirmation email.
+            </p>
+          )}
+
+          {leadError && (
+            <p className="text-sm text-red-400">
+              {leadError}
+            </p>
+          )}
+        </div>
       </div>
 
       {/* AI SUMMARY */}
