@@ -1,3 +1,7 @@
+"use client";
+
+import { useState } from "react";
+
 interface AuditResult {
   currentTool: string;
   currentPlan: string;
@@ -15,9 +19,14 @@ export default function AuditResults({
   results: AuditResult[];
   summary: string;
 }) {
-  if (results.length === 0) {
-    return null;
-  }
+  const [shareLoading, setShareLoading] =
+    useState(false);
+  const [shareUrl, setShareUrl] = useState<
+    string | null
+  >(null);
+  const [shareCopied, setShareCopied] = useState(
+    false
+  );
 
   const totalSavings = results.reduce(
     (acc, item) => acc + item.monthlySavings,
@@ -26,12 +35,106 @@ export default function AuditResults({
 
   const annualSavings = totalSavings * 12;
 
+  const handleShareAudit = async () => {
+    setShareLoading(true);
+
+    try {
+      const response = await fetch("/api/audit", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tools: results,
+          monthlySavings: totalSavings,
+          annualSavings: annualSavings,
+          summary: summary,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (data.id) {
+        const url = `${window.location.origin}/audit/${data.id}`;
+        setShareUrl(url);
+      }
+    } catch (error) {
+      console.error("Error sharing audit:", error);
+    } finally {
+      setShareLoading(false);
+    }
+  };
+
+  const handleCopyToClipboard = async () => {
+    if (shareUrl) {
+      await navigator.clipboard.writeText(shareUrl);
+      setShareCopied(true);
+      setTimeout(
+        () => setShareCopied(false),
+        2000
+      );
+    }
+  };
+
+  if (results.length === 0) {
+    return null;
+  }
+
   const isHighSavings = totalSavings >= 500;
 
   const isLowSavings = totalSavings < 100;
 
   return (
     <div className="mt-12 space-y-6">
+      {/* SHARE SECTION */}
+      {!shareUrl && (
+        <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
+          <p className="text-sm text-white/60">
+            Share your audit results with your team
+          </p>
+
+          <button
+            onClick={handleShareAudit}
+            disabled={shareLoading}
+            className="mt-4 rounded-lg bg-blue-500 px-6 py-3 font-medium text-white transition hover:bg-blue-600 disabled:opacity-50"
+          >
+            {shareLoading
+              ? "Creating Link..."
+              : "Share Audit"}
+          </button>
+        </div>
+      )}
+
+      {/* SHARE URL DISPLAY */}
+      {shareUrl && (
+        <div className="rounded-2xl border border-blue-500/30 bg-blue-500/10 p-6">
+          <p className="text-sm text-blue-400">
+            ✓ Shareable link created
+          </p>
+
+          <div className="mt-4 flex flex-col gap-3 md:flex-row md:items-center">
+            <input
+              type="text"
+              value={shareUrl}
+              readOnly
+              className="flex-1 rounded-lg bg-black/50 px-4 py-2 text-white/70"
+            />
+
+            <button
+              onClick={handleCopyToClipboard}
+              className="rounded-lg bg-blue-500 px-6 py-2 font-medium text-white transition hover:bg-blue-600"
+            >
+              {shareCopied ? "Copied!" : "Copy Link"}
+            </button>
+          </div>
+
+          <p className="mt-3 text-sm text-white/60">
+            Share this link on Twitter, Slack, or email.
+            It includes a nice preview!
+          </p>
+        </div>
+      )}
+
       {/* HERO SECTION */}
       <div
         className={`rounded-2xl border p-6 ${
