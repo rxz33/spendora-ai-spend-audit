@@ -199,67 +199,85 @@ export default function AuditResults({
             <h2 className="mt-3 text-4xl font-bold leading-tight text-slate-900 md:text-5xl">
               {isLowSavings
                 ? "Your AI spend looks healthy"
-                : `You could save ${formatCurrency(
-                    totalSavings
-                  )}/month`}
+                : "You are leaving money on the table"}
             </h2>
-            <p className="mt-4 text-lg leading-8 text-slate-600">
+            <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
               {isHighSavings
-                ? "This stack has enough recurring waste to justify taking action now."
+                ? "These savings are large enough to act on now."
                 : isLowSavings
-                ? "There are no major pricing mistakes here. Your current setup looks reasonable for the team details you entered."
-                : "There are a few clear ways to lower recurring spend without making the stack harder to use."}
+                ? "No major pricing mistakes. This setup looks reasonable."
+                : "A few changes could lower recurring spend without adding much friction."}
             </p>
           </div>
 
-          <div className="grid w-full gap-4 sm:grid-cols-3 lg:max-w-xl">
-            <div className="rounded-2xl border border-sky-200/70 bg-white/70 p-5">
+          <div className="grid w-full gap-4 sm:grid-cols-3 lg:max-w-2xl">
+            <div className="rounded-3xl border border-sky-200/70 bg-white/88 p-6">
               <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                 Monthly
               </p>
-              <p className="mt-3 text-3xl font-bold text-sky-600">
+              <p className="mt-3 text-5xl font-bold tracking-tight text-sky-600 md:text-6xl">
                 {formatCurrency(totalSavings)}
               </p>
+              <p className="mt-2 text-sm text-slate-500">
+                total savings opportunity
+              </p>
             </div>
-            <div className="rounded-2xl border border-sky-200/70 bg-white/70 p-5">
+            <div className="rounded-3xl border border-violet-200/70 bg-white/88 p-6">
               <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                 Annual
               </p>
-              <p className="mt-3 text-3xl font-bold text-violet-600">
+              <p className="mt-3 text-5xl font-bold tracking-tight text-violet-600 md:text-6xl">
                 {formatCurrency(annualSavings)}
               </p>
-            </div>
-            <div className="rounded-2xl border border-sky-200/70 bg-white/70 p-5">
-              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                Tools flagged
+              <p className="mt-2 text-sm text-slate-500">
+                if you keep this stack unchanged
               </p>
-              <p className="mt-3 text-3xl font-bold text-slate-900">
-                {optimizedTools.length}
+            </div>
+            <div className="rounded-3xl border border-sky-200/70 bg-white/88 p-6">
+              <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                Biggest move
+              </p>
+              <p className="mt-3 text-2xl font-bold leading-tight text-slate-900 md:text-3xl">
+                {biggestOpportunity
+                  ? biggestOpportunity.currentTool
+                  : "No urgent change"}
+              </p>
+              <p className="mt-2 text-sm text-slate-500">
+                {biggestOpportunity
+                  ? `${formatCurrency(
+                      biggestOpportunity.monthlySavings
+                    )}/mo is the clearest win`
+                  : "no major waste detected"}
               </p>
             </div>
           </div>
         </div>
 
         {biggestOpportunity && (
-          <div className="mt-6 rounded-2xl border border-sky-200/70 bg-white/70 p-5">
-            <p className="text-sm text-slate-500">
-              Biggest savings opportunity
+          <div className="mt-6 rounded-3xl border border-sky-200/70 bg-white/82 p-6">
+            <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+              Start here
             </p>
-            <div className="mt-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+            <div className="mt-3 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
               <div>
-                <p className="text-xl font-semibold text-slate-900">
+                <p className="text-2xl font-semibold text-slate-900">
                   {biggestOpportunity.currentTool}
                 </p>
-                <p className="mt-1 text-slate-600">
+                <p className="mt-1 text-base text-slate-600">
                   {biggestOpportunity.recommendation}
                 </p>
               </div>
-              <p className="text-2xl font-bold text-sky-600">
-                {formatCurrency(
-                  biggestOpportunity.monthlySavings
-                )}
-                /mo
-              </p>
+              <div className="text-left md:text-right">
+                <p className="text-4xl font-bold tracking-tight text-sky-600">
+                  {formatCurrency(
+                    biggestOpportunity.monthlySavings
+                  )}
+                  /mo
+                </p>
+                <p className="text-sm text-slate-500">
+                  biggest single savings lever
+                </p>
+              </div>
             </div>
           </div>
         )}
@@ -341,7 +359,7 @@ export default function AuditResults({
               </h3>
             </div>
             <p className="max-w-xl text-sm leading-7 text-slate-600">
-              Each row shows the current setup, the recommended next step, and the savings tied to that change.
+              Scan left to right: cost now, change next, money saved.
             </p>
           </div>
 
@@ -376,7 +394,7 @@ export default function AuditResults({
                         {hasSavings
                           ? `${formatCurrency(
                               result.monthlySavings
-                            )}/mo savings`
+                            )}/mo`
                           : "No major savings found"}
                       </div>
                     </div>
@@ -386,7 +404,7 @@ export default function AuditResults({
                         <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                           You pay now
                         </p>
-                        <p className="mt-2 text-lg font-semibold text-slate-900">
+                        <p className="mt-2 text-2xl font-semibold text-slate-900">
                           {formatCurrency(
                             result.currentSpend
                           )}
@@ -398,7 +416,7 @@ export default function AuditResults({
                         <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                           We suggest
                         </p>
-                        <p className="mt-2 text-lg font-semibold text-slate-900">
+                        <p className="mt-2 text-lg font-semibold leading-7 text-slate-900">
                           {result.recommendation}
                         </p>
                       </div>
@@ -407,7 +425,7 @@ export default function AuditResults({
                         <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                           You could save
                         </p>
-                        <p className="mt-2 text-lg font-semibold text-sky-600">
+                        <p className="mt-2 text-3xl font-bold tracking-tight text-sky-600">
                           {formatCurrency(
                             result.monthlySavings
                           )}
@@ -426,7 +444,7 @@ export default function AuditResults({
                       <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                         Why
                       </p>
-                      <p className="mt-2 leading-7 text-slate-600">
+                      <p className="mt-2 text-base leading-7 text-slate-600">
                         {result.reason}
                       </p>
                     </div>

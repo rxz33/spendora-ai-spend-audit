@@ -18,7 +18,6 @@ interface AuditData {
   created_at: string;
 }
 
-// Server-side data fetching for OG tags
 async function getAuditData(
   id: string
 ): Promise<AuditData | null> {
@@ -42,7 +41,6 @@ async function getAuditData(
   }
 }
 
-// Dynamic metadata generation for OG tags
 export async function generateMetadata({
   params,
 }: {
@@ -103,19 +101,18 @@ export default async function AuditPage({
     return (
       <main className="min-h-screen text-slate-900">
         <div className="mx-auto max-w-6xl px-6 py-24">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold text-slate-900">
+          <div className="rounded-[2rem] border border-white/70 bg-white/78 p-10 text-center shadow-[0_24px_80px_rgba(148,163,184,0.15)] backdrop-blur-xl">
+            <h1 className="text-4xl font-bold text-slate-950">
               Audit Not Found
             </h1>
             <p className="mt-4 text-slate-600">
-              This audit link may have expired or is
-              invalid.
+              This audit link may have expired or is invalid.
             </p>
             <Link
               href="/"
-              className="mt-8 inline-block rounded-lg bg-sky-500 px-6 py-3 font-medium text-white hover:bg-sky-600"
+              className="mt-8 inline-block rounded-2xl bg-sky-500 px-6 py-3 font-semibold text-white transition hover:bg-sky-600"
             >
-              Start a New Audit
+              Start a new audit
             </Link>
           </div>
         </div>
@@ -130,156 +127,194 @@ export default async function AuditPage({
 
   return (
     <main className="min-h-screen text-slate-900">
-      <section className="border-b border-sky-200/70">
-        <div className="mx-auto max-w-6xl px-6 py-12">
-          <h1 className="text-4xl font-bold text-slate-900">
-            Your AI Spend Audit Results
-          </h1>
-          <p className="mt-2 text-slate-600">
-            Shared audit from Spendora
+      <section className="mx-auto max-w-6xl px-6 py-14 md:py-16">
+        <div className="rounded-[2rem] border border-white/70 bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(245,243,255,0.98))] p-8 shadow-[0_24px_80px_rgba(148,163,184,0.16)] backdrop-blur-xl md:p-10">
+          <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+            Shared audit
           </p>
+          <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
+            <div className="max-w-3xl">
+              <h1 className="text-4xl font-bold leading-tight text-slate-950 md:text-5xl">
+                {isLowSavings
+                  ? "This AI stack looks healthy"
+                  : "This stack is leaving money on the table"}
+              </h1>
+              <p className="mt-4 text-lg leading-8 text-slate-600">
+                {isHighSavings
+                  ? "The savings here are large enough to act on now."
+                  : isLowSavings
+                  ? "No major pricing mistakes. The current tool mix looks reasonable."
+                  : "A few practical changes could lower recurring spend."}
+              </p>
+            </div>
+
+            <div className="grid w-full gap-4 sm:grid-cols-3 lg:max-w-2xl">
+              <div className="rounded-3xl border border-sky-200/70 bg-white/88 p-6">
+                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                  Monthly
+                </p>
+                <p className="mt-3 text-5xl font-bold tracking-tight text-sky-600 md:text-6xl">
+                  ${audit.monthly_savings}
+                </p>
+                <p className="mt-2 text-sm text-slate-500">
+                  total savings opportunity
+                </p>
+              </div>
+              <div className="rounded-3xl border border-violet-200/70 bg-white/88 p-6">
+                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                  Annual
+                </p>
+                <p className="mt-3 text-5xl font-bold tracking-tight text-violet-600 md:text-6xl">
+                  ${audit.annual_savings.toFixed(0)}
+                </p>
+                <p className="mt-2 text-sm text-slate-500">
+                  if nothing changes
+                </p>
+              </div>
+              <div className="rounded-3xl border border-sky-200/70 bg-white/88 p-6">
+                <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                  Biggest move
+                </p>
+                <p className="mt-3 text-2xl font-bold leading-tight text-slate-900 md:text-3xl">
+                  {audit.tools[0]?.tool || "Review stack"}
+                </p>
+                <p className="mt-2 text-sm text-slate-500">
+                  highest-value recommendation shown below
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <section className="mx-auto max-w-6xl px-6 py-12">
-        {/* HERO SECTION */}
-        <div
-          className={`rounded-2xl border p-8 ${
-            isHighSavings
-              ? "border-violet-200 bg-[linear-gradient(135deg,rgba(224,242,254,0.72),rgba(237,233,254,0.9))]"
-              : isLowSavings
-              ? "border-sky-200/70 bg-white/75"
-              : "border-sky-200/70 bg-white/75"
-          }`}
-        >
-          <div className="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
-            <div>
-              <h2 className="text-3xl font-bold text-slate-900">
-                {isLowSavings
-                  ? "Your AI Spend Looks Healthy"
-                  : "Estimated Savings Opportunity"}
-              </h2>
+      <section className="mx-auto max-w-6xl px-6 pb-20">
+        <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
+          <div className="rounded-[2rem] border border-white/70 bg-white/78 p-6 shadow-[0_24px_80px_rgba(148,163,184,0.13)] backdrop-blur-xl md:p-8">
+            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+              Per-tool breakdown
+            </p>
+            <h2 className="mt-2 text-3xl font-bold text-slate-950">
+              What to change and why
+            </h2>
+            <p className="mt-3 text-sm leading-7 text-slate-600">
+              Scan each tool by money first: current cost, next move, and savings.
+            </p>
 
-              <p className="mt-3 max-w-2xl text-slate-600">
-                {isLowSavings
-                  ? "This team's AI tooling stack appears operationally efficient."
-                  : "Optimization opportunities detected across subscriptions and vendor alternatives."}
-              </p>
-            </div>
+            <div className="mt-8 space-y-4">
+              {audit.tools.map((tool, idx) => (
+                <article
+                  key={idx}
+                  className="rounded-[1.6rem] border border-sky-200/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.95),rgba(245,243,255,0.88))] p-5"
+                >
+                  <div className="flex flex-col gap-4 md:flex-row md:items-start md:justify-between">
+                    <div className="flex-1">
+                      <h3 className="text-xl font-semibold text-slate-900">
+                        {tool.tool}
+                      </h3>
+                      <p className="mt-1 text-slate-500">
+                        Current plan: {tool.plan}
+                      </p>
+                    </div>
 
-            <div className="text-left md:text-right">
-              <p className="text-5xl font-bold text-sky-600">
-                ${audit.monthly_savings}/mo
-              </p>
+                    <div className="rounded-full bg-sky-100 px-3 py-1 text-sm font-medium text-sky-700">
+                      ${tool.monthlySavings}/mo
+                    </div>
+                  </div>
 
-              <p className="mt-2 text-slate-600">
-                ${audit.annual_savings.toFixed(0)} annually
-              </p>
-            </div>
-          </div>
-        </div>
+                  <div className="mt-5 grid gap-3 md:grid-cols-3">
+                    <div className="rounded-xl border border-sky-100 bg-white p-4">
+                      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                        You pay now
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold text-slate-900">
+                        ${tool.currentSpend}/mo
+                      </p>
+                    </div>
 
-        {/* RECOMMENDATIONS SECTION */}
-        <div className="mt-12">
-          <h3 className="text-2xl font-bold text-slate-900">
-            Per-Tool Breakdown
-          </h3>
+                    <div className="rounded-xl border border-sky-100 bg-white p-4">
+                      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                        Suggested move
+                      </p>
+                      <p className="mt-2 text-lg font-semibold leading-7 text-slate-900">
+                        {tool.recommendation}
+                      </p>
+                    </div>
 
-          <div className="mt-6 space-y-4">
-            {audit.tools.map((tool, idx) => (
-              <div
-                key={idx}
-                className="rounded-2xl border border-sky-200/70 bg-white/75 p-6 shadow-sm"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex-1">
-                    <h4 className="font-semibold text-slate-900">
-                      {tool.tool} ({tool.plan})
-                    </h4>
+                    <div className="rounded-xl border border-violet-100 bg-white p-4">
+                      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                        You save
+                      </p>
+                      <p className="mt-2 text-3xl font-bold tracking-tight text-sky-600">
+                        ${tool.monthlySavings}/mo
+                      </p>
+                      <p className="mt-1 text-sm text-slate-500">
+                        ${(tool.monthlySavings * 12).toFixed(0)} annually
+                      </p>
+                    </div>
+                  </div>
 
-                    <p className="mt-2 text-slate-600">
-                      {tool.recommendation}
+                  <div className="mt-3 rounded-xl border border-sky-100 bg-white p-4">
+                    <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                      Why
                     </p>
-
-                    <p className="mt-3 text-sm text-slate-500">
-                      <span className="font-medium text-slate-700">
-                        Reasoning:
-                      </span>{" "}
+                    <p className="mt-2 text-sm leading-7 text-slate-600">
                       {tool.reason}
                     </p>
                   </div>
-
-                  <div className="ml-6 text-right">
-                    <p className="text-xl font-bold text-sky-600">
-                      ${tool.monthlySavings}/mo
-                    </p>
-                    <p className="text-sm text-slate-500">
-                      Current:{" "}
-                      <span className="text-slate-900">
-                        ${tool.currentSpend}
-                      </span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
+                </article>
+              ))}
+            </div>
           </div>
-        </div>
 
-        {/* AI SUMMARY SECTION */}
-        {audit.summary && (
-          <div className="mt-12 rounded-2xl border border-sky-200/70 bg-white/75 p-6 shadow-sm">
-            <h3 className="text-lg font-semibold text-slate-900">
-              AI Analysis Summary
-            </h3>
-            <p className="mt-4 leading-relaxed text-slate-600">
-              {audit.summary}
-            </p>
+          <div className="space-y-6">
+            {audit.summary && (
+              <section className="rounded-[2rem] border border-white/70 bg-white/78 p-6 shadow-[0_24px_80px_rgba(148,163,184,0.13)] backdrop-blur-xl md:p-8">
+                <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+                  AI summary
+                </p>
+                <p className="mt-4 text-lg leading-8 text-slate-600">
+                  {audit.summary}
+                </p>
+              </section>
+            )}
+
+            {isHighSavings && (
+              <section className="rounded-[2rem] border border-violet-200 bg-[linear-gradient(135deg,rgba(224,242,254,0.72),rgba(237,233,254,0.9))] p-6 shadow-[0_24px_80px_rgba(148,163,184,0.13)] md:p-8">
+                <p className="text-sm uppercase tracking-[0.28em] text-violet-700/70">
+                  High-savings case
+                </p>
+                <h3 className="mt-2 text-3xl font-bold text-slate-950">
+                  Credex can help capture these savings
+                </h3>
+                <p className="mt-4 text-lg leading-8 text-slate-600">
+                  This is large enough to justify a vendor, pricing, or procurement conversation instead of treating it as a minor cleanup task.
+                </p>
+                <a
+                  href="https://credex.rocks/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-6 inline-block rounded-2xl bg-sky-500 px-6 py-3 font-semibold text-white transition hover:bg-sky-600"
+                >
+                  Explore Credex
+                </a>
+              </section>
+            )}
+
+            <section className="rounded-[2rem] border border-white/70 bg-white/78 p-6 shadow-[0_24px_80px_rgba(148,163,184,0.13)] backdrop-blur-xl md:p-8">
+              <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+                Built with Spendora
+              </p>
+              <p className="mt-4 leading-7 text-slate-600">
+                This shared audit keeps the numbers, recommendations, and summary, while leaving out personal details.
+              </p>
+              <Link
+                href="/"
+                className="mt-6 inline-block rounded-2xl border border-sky-200 bg-white px-6 py-3 font-semibold text-slate-700 transition hover:border-sky-300"
+              >
+                Run your own audit
+              </Link>
+            </section>
           </div>
-        )}
-
-        {/* CTA SECTION */}
-        {isHighSavings && (
-          <div className="mt-12 rounded-2xl border border-violet-200 bg-[linear-gradient(135deg,rgba(224,242,254,0.72),rgba(237,233,254,0.9))] p-8 shadow-sm">
-            <h3 className="text-2xl font-bold text-slate-900">
-              Significant Savings Opportunity
-            </h3>
-
-            <p className="mt-3 text-slate-600">
-              Teams saving more than $500/month often benefit
-              from centralized procurement, vendor
-              consolidation, and negotiated enterprise pricing
-              through Credex.
-            </p>
-
-            <p className="mt-4 text-sm text-slate-500">
-              Get discounted AI infrastructure credits from
-              Credex and capture more of these savings.
-            </p>
-
-            <a
-              href="https://credex.rocks"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-block rounded-lg bg-sky-500 px-6 py-3 font-medium text-white transition hover:bg-sky-600"
-            >
-              Learn About Credex →
-            </a>
-          </div>
-        )}
-
-        {/* FOOTER */}
-        <div className="mt-12 border-t border-sky-200/70 pt-8 text-center text-slate-600">
-          <p>
-            This audit was generated by Spendora, a free AI
-            spend optimization tool.
-          </p>
-          <Link
-            href="/"
-            className="mt-4 inline-block text-sky-600 hover:underline"
-          >
-            Run your own audit →
-          </Link>
         </div>
       </section>
     </main>
