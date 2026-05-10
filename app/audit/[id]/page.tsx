@@ -46,9 +46,10 @@ async function getAuditData(
 export async function generateMetadata({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }): Promise<Metadata> {
-  const audit = await getAuditData(params.id);
+  const { id } = await params;
+  const audit = await getAuditData(id);
 
   if (!audit) {
     return {
@@ -69,7 +70,7 @@ export async function generateMetadata({
       title: `AI Spend Audit: $${audit.monthly_savings}/month savings`,
       description: savingsDescription,
       type: "website",
-      url: `https://spendora-ai-spend-audit.vercel.app/audit/${params.id}`,
+      url: `https://spendora-ai-spend-audit.vercel.app/audit/${id}`,
       images: [
         {
           url: "https://spendora-ai-spend-audit.vercel.app/og-image.png",
@@ -93,9 +94,10 @@ export async function generateMetadata({
 export default async function AuditPage({
   params,
 }: {
-  params: { id: string };
+  params: Promise<{ id: string }>;
 }) {
-  const audit = await getAuditData(params.id);
+  const { id } = await params;
+  const audit = await getAuditData(id);
 
   if (!audit) {
     return (
