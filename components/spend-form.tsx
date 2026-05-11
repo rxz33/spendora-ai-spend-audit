@@ -5,72 +5,36 @@ import { useState } from "react";
 import { useLocalStorage } from "@/hooks/use-local-storage";
 import { pricingData } from "@/data/pricing";
 import { runAudit } from "@/lib/audit-engine";
+import { validateTool, type FormToolInput } from "@/types/forms";
+import { type AuditRecommendation } from "@/types/audit";
 
 import AuditResults from "@/components/audit-results";
 
-interface AuditResult {
-  currentTool: string;
-  currentPlan: string;
-  currentSpend: number;
-  recommendation: string;
-  monthlySavings: number;
-  annualSavings: number;
-  reason: string;
-}
-
-interface ToolInput {
-  tool: string;
-  plan: string;
-  monthlySpend: number | "";
-  seats: number | "";
-  teamSize: number | "";
-  useCase: string;
-}
-
-interface SanitizedToolInput {
-  tool: string;
-  plan: string;
-  monthlySpend: number;
-  seats: number;
-  teamSize: number;
-  useCase: string;
-}
-
-function clampNonNegative(
-  value: string
-): number | "" {
+function clampNonNegative(value: string): number | "" {
   if (value === "") {
     return "";
   }
-
   return Math.max(Number(value), 0);
 }
 
 export default function SpendForm() {
-  const [tools, setTools] =
-    useLocalStorage<ToolInput[]>(
-      "spendora-tools",
-      [
-        {
-          tool: "",
-          plan: "",
-          monthlySpend: "",
-          seats: "",
-          teamSize: "",
-          useCase: "",
-        },
-      ]
-    );
+  const [tools, setTools] = useLocalStorage<FormToolInput[]>(
+    "spendora-tools",
+    [
+      {
+        tool: "",
+        plan: "",
+        monthlySpend: "",
+        seats: "",
+        teamSize: "",
+        useCase: "",
+      },
+    ]
+  );
 
-  const [results, setResults] = useState<
-    AuditResult[]
-  >([]);
-
-  const [summary, setSummary] =
-    useState("");
-
-  const [loading, setLoading] =
-    useState(false);
+  const [results, setResults] = useState<AuditRecommendation[]>([]);
+  const [summary, setSummary] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const addTool = () => {
     setTools([
@@ -87,100 +51,65 @@ export default function SpendForm() {
   };
 
   const removeTool = (index: number) => {
-    const updated = tools.filter(
-      (_, i) => i !== index
-    );
-
+    const updated = tools.filter((_, i) => i !== index);
     setTools(updated);
   };
 
   const updateTool = (
     index: number,
-    field: keyof ToolInput,
+    field: keyof FormToolInput,
     value: string | number
   ) => {
     const updated = [...tools];
-
     updated[index] = {
       ...updated[index],
       [field]: value,
     };
-
     setTools(updated);
   };
 
   const handleAudit = async () => {
     setLoading(true);
 
-    const sanitizedTools: SanitizedToolInput[] =
-      tools.map((tool) => ({
-        tool: tool.tool,
-        plan: tool.plan,
+    // Validate and convert form input to proper types
+    const validatedTools = tools
+      .map(validateTool)
+      .filter((tool): tool is Exclude<ReturnType<typeof validateTool>, null> => tool !== null);
 
-        monthlySpend: Number(
-          tool.monthlySpend || 0
-        ),
+    if (validatedTools.length === 0) {
+      setLoading(false);
+      return;
+    }
 
-        seats: Number(
-          tool.seats || 0
-        ),
-
-        teamSize: Number(
-          tool.teamSize || 0
-        ),
-
-        useCase: tool.useCase,
-      }));
-
-    const auditResults =
-      runAudit(sanitizedTools);
-
+    const auditResults = runAudit(validatedTools);
     setResults(auditResults);
 
-    const totalMonthlySavings =
-      auditResults.reduce(
-        (acc, item) =>
-          acc + item.monthlySavings,
-        0
-      );
-
-    const totalAnnualSavings =
-      totalMonthlySavings * 12;
+    const totalMonthlySavings = auditResults.reduce((acc, item) => acc + item.monthlySavings, 0);
+    const totalAnnualSavings = totalMonthlySavings * 12;
 
     try {
-      const response = await fetch(
-        "/api/generate-summary",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type":
-              "application/json",
-          },
-          body: JSON.stringify({
-            totalMonthlySavings,
-            totalAnnualSavings,
-            recommendations:
-              auditResults.map((r) => ({
-                tool: r.currentTool,
-                currentSpend:
-                  r.currentSpend,
-                recommendation:
-                  r.recommendation,
-                monthlySavings:
-                  r.monthlySavings,
-                reasoning: r.reason,
-              })),
-          }),
-        }
-      );
+      const response = await fetch("/api/generate-summary", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          totalMonthlySavings,
+          totalAnnualSavings,
+          recommendations: auditResults.map((r) => ({
+            tool: r.currentTool,
+            currentSpend: r.currentSpend,
+            recommendation: r.recommendation,
+            monthlySavings: r.monthlySavings,
+            reasoning: r.reason,
+          })),
+        }),
+      });
 
-      const data =
-        await response.json();
-
+      const data = await response.json();
       setSummary(data.summary);
     } catch (error) {
       console.error(error);
-
       setSummary(
         "Your audit identified optimization opportunities across your AI tooling stack, including plan efficiency improvements and reduced subscription overlap."
       );
