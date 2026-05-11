@@ -25,24 +25,18 @@ export interface ValidatedTool {
 }
 
 /**
- * Type guard to validate form input
- */
-export function isValidTool(tool: FormToolInput): tool is ValidatedTool {
-  return (
-    tool.tool.length > 0 &&
-    tool.plan.length > 0 &&
-    Number(tool.monthlySpend) >= 0 &&
-    Number(tool.seats) >= 0 &&
-    Number(tool.teamSize) >= 0 &&
-    tool.useCase.length > 0
-  );
-}
-
-/**
  * Converts form input to validated data
+ * Returns null if validation fails
  */
 export function validateTool(input: FormToolInput): ValidatedTool | null {
-  if (!isValidTool(input)) {
+  if (
+    input.tool.length === 0 ||
+    input.plan.length === 0 ||
+    Number(input.monthlySpend) < 0 ||
+    Number(input.seats) < 0 ||
+    Number(input.teamSize) < 0 ||
+    input.useCase.length === 0
+  ) {
     return null;
   }
 

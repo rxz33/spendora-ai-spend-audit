@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getSupabaseClient } from "@/lib/supabase";
+import { getSupabaseClient } from "@/server/supabase";
 
 interface AuditData {
   tools: Array<{
