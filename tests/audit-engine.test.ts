@@ -96,7 +96,7 @@ describe("audit engine", () => {
 
     const result = results[0];
     // ChatGPT triggers overlap detection rule first
-    expect(result.recommendation).toContain("consolidating");
+    expect(result.recommendation).toContain("Consolidate");
   });
 
   it("returns honest recommendation when setup is reasonable", () => {
