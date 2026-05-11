@@ -82,9 +82,10 @@ export default function SpendForm() {
     }
 
     const auditResults = runAudit(validatedTools);
-    setResults(auditResults);
+    const { recommendations } = auditResults;
+    setResults(recommendations);
 
-    const totalMonthlySavings = auditResults.reduce((acc, item) => acc + item.monthlySavings, 0);
+    const totalMonthlySavings = recommendations.reduce((acc, item) => acc + item.monthlySavings, 0);
     const totalAnnualSavings = totalMonthlySavings * 12;
 
     try {
@@ -96,7 +97,7 @@ export default function SpendForm() {
         body: JSON.stringify({
           totalMonthlySavings,
           totalAnnualSavings,
-          recommendations: auditResults.map((r) => ({
+          recommendations: recommendations.map((r) => ({
             tool: r.currentTool,
             currentSpend: r.currentSpend,
             recommendation: r.recommendation,

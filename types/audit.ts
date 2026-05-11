@@ -1,18 +1,44 @@
 /**
- * Input to audit engine - already validated
+ * Confidence levels for audit recommendations
+ */
+export type ConfidenceLevel = "high" | "medium" | "low";
+
+/**
+ * Operational risk assessment
+ */
+export type OperationalRisk = "low" | "medium" | "high";
+
+/**
+ * Migration difficulty assessment
+ */
+export type MigrationDifficulty = "easy" | "moderate" | "hard";
+
+/**
+ * Recommendation priority
+ */
+export type RecommendationPriority = "critical" | "important" | "optional";
+
+/**
+ * Enhanced input to audit engine - supports both team-based and company-level insights
+ * Maintains backward compatibility with existing teamSize usage
  */
 export interface ToolSpend {
   tool: string;
   plan: string;
   monthlySpend: number;
-  seats: number;
-  teamSize: number;
+  seats: number; // Total seats allocated
+  teamSize: number; // Team members using this tool
+  
+  // NEW: Optional organization context
+  activeUsers?: number; // How many actually use this tool
+  companySize?: number; // Total company headcount
+  department?: string; // Which department uses this
+  
   useCase: string;
 }
 
 /**
- * Discriminated union for audit recommendations
- * Forces exhaustive handling of all cases
+ * Recommendation with full audit context
  */
 export type AuditRecommendation =
   | {
@@ -24,6 +50,10 @@ export type AuditRecommendation =
       reason: string;
       monthlySavings: 0;
       annualSavings: 0;
+      confidence: ConfidenceLevel;
+      operationalRisk: OperationalRisk;
+      migrationDifficulty: MigrationDifficulty;
+      priority: RecommendationPriority;
     }
   | {
       type: "plan-downgrade";
@@ -34,6 +64,10 @@ export type AuditRecommendation =
       monthlySavings: number;
       annualSavings: number;
       reason: string;
+      confidence: ConfidenceLevel;
+      operationalRisk: OperationalRisk;
+      migrationDifficulty: MigrationDifficulty;
+      priority: RecommendationPriority;
     }
   | {
       type: "tool-switch";
@@ -44,6 +78,10 @@ export type AuditRecommendation =
       monthlySavings: number;
       annualSavings: number;
       reason: string;
+      confidence: ConfidenceLevel;
+      operationalRisk: OperationalRisk;
+      migrationDifficulty: MigrationDifficulty;
+      priority: RecommendationPriority;
     }
   | {
       type: "consolidate-overlap";
@@ -54,6 +92,10 @@ export type AuditRecommendation =
       monthlySavings: number;
       annualSavings: number;
       reason: string;
+      confidence: ConfidenceLevel;
+      operationalRisk: OperationalRisk;
+      migrationDifficulty: MigrationDifficulty;
+      priority: RecommendationPriority;
     }
   | {
       type: "capability-mismatch";
@@ -64,6 +106,10 @@ export type AuditRecommendation =
       monthlySavings: number;
       annualSavings: number;
       reason: string;
+      confidence: ConfidenceLevel;
+      operationalRisk: OperationalRisk;
+      migrationDifficulty: MigrationDifficulty;
+      priority: RecommendationPriority;
     }
   | {
       type: "api-optimization";
@@ -74,4 +120,24 @@ export type AuditRecommendation =
       monthlySavings: number;
       annualSavings: number;
       reason: string;
+      confidence: ConfidenceLevel;
+      operationalRisk: OperationalRisk;
+      migrationDifficulty: MigrationDifficulty;
+      priority: RecommendationPriority;
     };
+
+/**
+ * Stack-level audit insights
+ * Aggregated analysis across all tools
+ */
+export interface StackAuditInsights {
+  overallOptimizationScore: number; // 0-100
+  fragmentationRisk: "low" | "medium" | "high";
+  overlapSummary: string;
+  benchmarkInsights: string[];
+  totalPotentialMonthlySavings: number;
+  totalPotentialAnnualSavings: number;
+  criticalFindings: number;
+  importantFindings: number;
+  optionalFindings: number;
+}
