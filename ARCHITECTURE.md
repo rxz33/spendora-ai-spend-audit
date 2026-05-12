@@ -2,23 +2,10 @@
 
 ## Stack
 
-### Frontend
-- Next.js (App Router)
-- TypeScript
-- Tailwind CSS
-- shadcn/ui
-
-### Infrastructure
-- Vercel deployment
-- GitHub Actions CI/CD
-- Husky pre-commit hooks
-
-### Testing
-- Vitest
-
-### Planned Integrations
-- Supabase (audit persistence + lead storage)
-- Anthropic API (AI-generated executive summaries)
+**Frontend:** Next.js (App Router), TypeScript, Tailwind CSS, shadcn/ui  
+**Backend:** Vercel serverless, Supabase (leads + audits), Groq API (summaries)  
+**Testing:** Vitest  
+**CI/CD:** GitHub Actions, Husky pre-commit  
 
 ---
 
@@ -26,74 +13,53 @@
 
 ```mermaid
 flowchart TD
-
-A[Spend Input Form]
---> B[Local State + Persistence]
-
+A[Spend Input Form] --> B[localStorage Persistence]
 B --> C[Deterministic Audit Engine]
-
-C --> D[Savings Analysis]
-
-D --> E[Recommendation Layer]
-
-E --> F[AI Summary via Groq API]
-
+C --> D[Savings Analysis & Scoring]
+D --> E[Recommendations Ranked]
+E --> F[AI Summary via Groq]
 F --> G[Results Dashboard]
-
-G --> H{Email Capture?}
-
+G --> H{Capture Email?}
 H -->|Yes| I[Supabase Lead Storage]
-
-H -->|No| J[Shareable Audit URL]
-
+H -->|No| J[Shareable URL]
 I --> K[Transactional Email via Resend]
-
-J --> L[Public Audit Page with OG Tags]
-
+J --> L[Public Page with OG Tags]
 K --> M[High-Savings: Credex CTA]
-
 L --> M
 ```
 
 ---
 
-## Scale Considerations
+## Why These Choices
 
-The current architecture is optimized for low operational overhead and can scale horizontally for high audit volume workloads.
+**Deterministic Audit Rules (not AI):** TypeScript rules are testable, explainable, and financially defensible. Assignment emphasizes knowing when *not* to use AI.
 
-- serverless deployment on Vercel
-- stateless audit engine
-- lightweight TypeScript computation
-- cached pricing data
-- database indexing for audit lookups
-- separation of pricing data from audit logic for independent updates
+**Groq for Summaries:** Faster inference, generous free tier. Since audit math is deterministic, we don't need expensive LLM reasoning—just readable summaries.
+
+**App Router:** Better server/client separation, cleaner API routes, native support for dynamic pages (`/audit/[id]`).
+
+**localStorage Persistence:** No backend sync needed for form state. We capture data *after* showing value, so single-device persistence is fine.
+
+**Honest "Already Optimized" State:** Fake savings destroy credibility. Better to build trust for long-term Credex conversions.
 
 ---
 
-## Design Decisions
+## Scale Path
 
-### Why Deterministic Audit Rules
+- **Serverless Vercel:** Horizontal scaling for high audit volume
+- **Stateless audit engine:** No server state, instant horizontal scaling
+- **Lightweight computation:** Deterministic rules are CPU-efficient
+- **Database indexing:** Fast audit lookups by ID
+- **Cached pricing data:** Versioned, independent of audit logic
 
-The recommendation engine intentionally uses deterministic TypeScript rules instead of LLM-generated recommendations for the first version of the product.
+If this hits 10k audits/day, separate pricing data into a versioned service, add caching layer (Redis), and split audit storage across Postgres shards.
 
-Reasons:
-- predictable and explainable outputs
-- easier testing and debugging
-- reduced hallucination risk
-- simpler pricing normalization across vendors
-- easier enforcement of honest recommendation states
+---
 
-AI-generated summaries are planned as a secondary enhancement layer rather than the primary decision engine.
+## Production Considerations
 
-- Audit logic uses deterministic TypeScript rules
-- AI is used only for summaries
-- Public share URLs exclude sensitive data
-
-## Future Improvements
-
-- organization-wide spend aggregation
-- vendor overlap detection using embeddings
-- shareable audit reports
-- usage-based pricing normalization
-- AI-generated optimization summaries
-- CRM integration for enterprise lead routing
+**Abuse Protection:** Honeypot field on lead form (simple, effective for MVP traffic)  
+**Rate Limiting:** Vercel's built-in + future middleware for aggressive patterns  
+**Email Validation:** Resend handles bounces; Supabase tracks soft/hard failures  
+**Error Handling:** Graceful fallback summaries if Groq API fails  
+**Environment Variables:** All secrets in .env.local, CI uses GitHub Actions secrets

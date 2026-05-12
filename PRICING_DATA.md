@@ -152,7 +152,7 @@ Verified:
 
 ---
 
-# Cursor
+# Windsurf
 
 Plans:
 - Free

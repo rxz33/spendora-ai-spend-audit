@@ -15,7 +15,6 @@ import {
 import {
   hasCapabilityOverlap,
   getToolCapabilities,
-  hasCapabilityMismatch,
 } from "./tool-capabilities-map";
 import {
   planEfficiencyRules,
@@ -553,7 +552,7 @@ function generateBenchmarkInsights(
 
   // Estimate company size from tools and spend patterns
   // This is heuristic, not statistical
-  const avgToolSpend = totalSpend / Math.max(tools.length, 1);
+  // const avgToolSpend = totalSpend / Math.max(tools.length, 1);
 
   if (totalSpend > 500 && tools.length > 5) {
     insights.push(
