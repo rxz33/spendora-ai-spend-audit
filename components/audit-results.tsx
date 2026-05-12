@@ -193,7 +193,7 @@ export default function AuditResults({
       <section className="rounded-3xl border border-emerald-200/70 bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(245,243,255,0.98))] p-6 shadow-sm md:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-emerald-800">
               Audit Results
             </p>
             <h2 className="mt-3 text-4xl font-bold leading-tight text-slate-900 md:text-5xl">
@@ -201,7 +201,7 @@ export default function AuditResults({
                 ? "Your AI spend looks healthy"
                 : "You are leaving money on the table"}
             </h2>
-            <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-600">
+            <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-700">
               {isHighSavings
                 ? "These savings are large enough to act on now."
                 : isLowSavings
@@ -218,7 +218,7 @@ export default function AuditResults({
               <p className="mt-3 text-5xl font-bold tracking-tight text-emerald-600 md:text-6xl">
                 {formatCurrency(totalSavings)}
               </p>
-              <p className="mt-2 text-sm text-slate-500">
+              <p className="mt-2 text-sm text-slate-600">
                 total savings opportunity
               </p>
             </div>
@@ -229,7 +229,7 @@ export default function AuditResults({
               <p className="mt-3 text-5xl font-bold tracking-tight text-violet-600 md:text-6xl">
                 {formatCurrency(annualSavings)}
               </p>
-              <p className="mt-2 text-sm text-slate-500">
+              <p className="mt-2 text-sm text-slate-600">
                 if you keep this stack unchanged
               </p>
             </div>
@@ -263,7 +263,7 @@ export default function AuditResults({
                 <p className="text-2xl font-semibold text-slate-900">
                   {biggestOpportunity.currentTool}
                 </p>
-                <p className="mt-1 text-base text-slate-600">
+                <p className="mt-1 text-base text-slate-700">
                   {biggestOpportunity.recommendation}
                 </p>
               </div>
@@ -274,7 +274,7 @@ export default function AuditResults({
                   )}
                   /mo
                 </p>
-                <p className="text-sm text-slate-500">
+                <p className="text-sm text-slate-600">
                   biggest single savings lever
                 </p>
               </div>
@@ -286,7 +286,7 @@ export default function AuditResults({
       <section className="rounded-3xl border border-emerald-200/70 bg-white/75 p-6 shadow-sm md:p-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-emerald-800">
               Share Audit
             </p>
             <h3 className="mt-2 text-2xl font-semibold text-slate-900">
@@ -327,13 +327,13 @@ export default function AuditResults({
 
       {isHighSavings && (
         <section className="rounded-3xl border border-violet-200 bg-[linear-gradient(135deg,rgba(224,242,254,0.7),rgba(237,233,254,0.9))] p-6 shadow-sm md:p-8">
-          <p className="text-sm uppercase tracking-[0.28em] text-violet-700/70">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-violet-800">
             High-Savings Case
           </p>
           <h3 className="mt-2 text-3xl font-semibold text-slate-900">
             Credex can help capture these savings
           </h3>
-          <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-600">
+          <p className="mt-4 max-w-3xl text-lg leading-8 text-slate-700">
             At {formatCurrency(totalSavings)} per month, this is more than a small cleanup. It is worth looking at vendor consolidation, better pricing, and procurement support.
           </p>
           <a
@@ -351,7 +351,7 @@ export default function AuditResults({
         <div className="rounded-3xl border border-emerald-200/70 bg-white/75 p-6 shadow-sm md:p-8">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-emerald-800">
                 Per-Tool Breakdown
               </p>
               <h3 className="mt-2 text-2xl font-semibold text-slate-900">
@@ -431,7 +431,7 @@ export default function AuditResults({
                           )}
                           /mo
                         </p>
-                        <p className="mt-1 text-sm text-slate-500">
+                        <p className="mt-1 text-sm text-slate-600">
                           {formatCurrency(
                             result.annualSavings
                           )}{" "}
@@ -457,7 +457,7 @@ export default function AuditResults({
 
         <div className="space-y-6">
           <section className="rounded-3xl border border-emerald-200/70 bg-white/75 p-6 shadow-sm md:p-8">
-            <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-emerald-800">
               AI Summary
             </p>
             <p className="mt-4 text-lg leading-8 text-slate-600">
@@ -466,7 +466,7 @@ export default function AuditResults({
           </section>
 
           <section className="rounded-3xl border border-emerald-200/70 bg-white/75 p-6 shadow-sm md:p-8">
-            <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-emerald-800">
               {isHighSavings
                 ? "Follow-Up"
                 : "Stay Updated"}
@@ -483,62 +483,99 @@ export default function AuditResults({
             </p>
 
             <div className="mt-6 grid gap-4">
-              <input
-                type="email"
-                placeholder="Work email"
-                value={leadEmail}
-                onChange={(e) =>
-                  setLeadEmail(e.target.value)
-                }
-                className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
-              />
-
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="lead-email"
+                  className="text-sm font-medium text-slate-700"
+                >
+                  Work email
+                </label>
                 <input
-                  type="text"
-                  placeholder="Company name (optional)"
-                  value={companyName}
+                  id="lead-email"
+                  type="email"
+                  placeholder="Work email"
+                  value={leadEmail}
                   onChange={(e) =>
-                    setCompanyName(
-                      e.target.value
-                    )
+                    setLeadEmail(e.target.value)
                   }
                   className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
                 />
+              </div>
+
+              <div className="grid gap-4 md:grid-cols-2">
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="company-name"
+                    className="text-sm font-medium text-slate-700"
+                  >
+                    Company name
+                  </label>
+                  <input
+                    id="company-name"
+                    type="text"
+                    placeholder="Company name (optional)"
+                    value={companyName}
+                    onChange={(e) =>
+                      setCompanyName(
+                        e.target.value
+                      )
+                    }
+                    className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
+                  />
+                </div>
+                <div className="space-y-1.5">
+                  <label
+                    htmlFor="lead-role"
+                    className="text-sm font-medium text-slate-700"
+                  >
+                    Role
+                  </label>
+                  <input
+                    id="lead-role"
+                    type="text"
+                    placeholder="Role (optional)"
+                    value={role}
+                    onChange={(e) =>
+                      setRole(e.target.value)
+                    }
+                    className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label
+                  htmlFor="lead-team-size"
+                  className="text-sm font-medium text-slate-700"
+                >
+                  Team size
+                </label>
                 <input
-                  type="text"
-                  placeholder="Role (optional)"
-                  value={role}
+                  id="lead-team-size"
+                  type="number"
+                  min="0"
+                  placeholder="Team size (optional)"
+                  value={teamSize}
                   onChange={(e) =>
-                    setRole(e.target.value)
+                    setTeamSize(
+                      e.target.value === ""
+                        ? ""
+                        : String(
+                            Math.max(
+                              Number(
+                                e.target.value
+                              ),
+                              0
+                            )
+                          )
+                    )
                   }
                   className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
                 />
               </div>
 
               <input
-                type="number"
-                min="0"
-                placeholder="Team size (optional)"
-                value={teamSize}
-                onChange={(e) =>
-                  setTeamSize(
-                    e.target.value === ""
-                      ? ""
-                      : String(
-                          Math.max(
-                            Number(
-                              e.target.value
-                            ),
-                            0
-                          )
-                        )
-                  )
-                }
-                className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
-              />
-
-              <input
+                id="honeypot-website"
                 type="text"
                 tabIndex={-1}
                 autoComplete="off"

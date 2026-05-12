@@ -3,57 +3,7 @@
 import { useRef } from "react";
 import SpendFormWrapper from "@/components/spend-form-wrapper";
 
-const pricingData = [
-  {
-    name: "Cursor",
-    description: "Code editor with AI completion",
-    plans: [
-      { name: "Free", price: 0 },
-      { name: "Pro", price: 20 },
-    ],
-  },
-  {
-    name: "GitHub Copilot",
-    description: "AI code generation for developers",
-    plans: [
-      { name: "Individual", price: 10 },
-      { name: "Business", price: 21 },
-    ],
-  },
-  {
-    name: "Claude",
-    description: "Anthropic's AI assistant",
-    plans: [
-      { name: "Free", price: 0 },
-      { name: "Claude Pro", price: 20 },
-    ],
-  },
-  {
-    name: "ChatGPT",
-    description: "OpenAI's conversational AI",
-    plans: [
-      { name: "Free", price: 0 },
-      { name: "Plus", price: 20 },
-      { name: "Team", price: 30 },
-    ],
-  },
-  {
-    name: "Google Gemini",
-    description: "Google's AI model",
-    plans: [
-      { name: "Free", price: 0 },
-      { name: "Gemini Advanced", price: 20 },
-    ],
-  },
-  {
-    name: "Windsurf",
-    description: "Codeium's AI code editor",
-    plans: [
-      { name: "Free", price: 0 },
-      { name: "Pro", price: 15 },
-    ],
-  },
-];
+import { pricingData } from "@/data/pricing";
 
 export default function HomePage() {
   const formRef = useRef<HTMLDivElement>(null);
@@ -88,7 +38,7 @@ export default function HomePage() {
                 Find wasted AI spend before it becomes normal.
               </h1>
 
-              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-600 md:text-xl">
+              <p className="mt-6 max-w-2xl text-lg leading-8 text-slate-700 md:text-xl">
                 Run a clean audit of your team&apos;s AI tools, see exactly where money is leaking, and turn the result into something worth sharing with founders or procurement.
               </p>
 
@@ -112,7 +62,7 @@ export default function HomePage() {
             <div className="rounded-[2rem] border border-white/70 bg-white/70 p-6 shadow-[0_24px_80px_rgba(148,163,184,0.18)] backdrop-blur-xl md:p-8">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-5">
-                  <p className="text-sm font-medium text-slate-500">
+                  <p className="text-sm font-medium text-slate-700">
                     What you get
                   </p>
                   <p className="mt-3 text-2xl font-semibold text-slate-900">
@@ -124,7 +74,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="rounded-2xl border border-violet-100 bg-violet-50/80 p-5">
-                  <p className="text-sm font-medium text-slate-500">
+                  <p className="text-sm font-medium text-slate-700">
                     Output
                   </p>
                   <p className="mt-3 text-2xl font-semibold text-slate-900">
@@ -136,7 +86,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="rounded-2xl border border-emerald-100 bg-white p-5 sm:col-span-2">
-                  <p className="text-sm font-medium text-slate-500">
+                  <p className="text-sm font-medium text-slate-700">
                     Best for
                   </p>
                   <div className="mt-4 flex flex-wrap gap-3">
@@ -170,14 +120,14 @@ export default function HomePage() {
       <section ref={pricingRef} className="mx-auto max-w-6xl px-6 pb-20 pt-8 md:pb-24">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-emerald-800">
               Pricing data
             </p>
             <h2 className="mt-2 text-4xl font-bold text-slate-950">
               Current plan pricing behind the audit
             </h2>
           </div>
-          <p className="max-w-xl text-base leading-7 text-slate-600">
+          <p className="max-w-xl text-base leading-7 text-slate-700">
             These reference prices power the audit recommendations and keep the savings math transparent.
           </p>
         </div>
@@ -185,40 +135,40 @@ export default function HomePage() {
         <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
           {pricingData.map((tool, index) => (
             <div
-              key={tool.name}
+              key={tool.tool}
               className={`rounded-[1.7rem] border p-6 shadow-sm backdrop-blur-sm ${
                 index % 3 === 0
-                  ? "border-emerald-200 bg-white/78"
-                  : index % 3 === 1
-                  ? "border-violet-200 bg-violet-50/70"
-                  : "border-emerald-100 bg-emerald-50/70"
-              }`}
-            >
-              <h3 className="text-xl font-semibold text-slate-900">
-                {tool.name}
-              </h3>
-              <p className="mt-2 text-sm leading-7 text-slate-600">
-                {tool.description}
-              </p>
-
-              <div className="mt-6 space-y-3">
-                {tool.plans.map((plan) => (
-                  <div
-                    key={plan.name}
-                    className="flex items-center justify-between rounded-xl border border-white/70 bg-white/75 px-4 py-3 text-sm"
-                  >
-                    <span className="text-slate-600">
-                      {plan.name}
-                    </span>
-                    <span className="font-semibold text-slate-900">
-                      ${plan.price}/mo
-                    </span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
-        </div>
+                   ? "border-emerald-200 bg-white/78"
+                   : index % 3 === 1
+                   ? "border-violet-200 bg-violet-50/70"
+                   : "border-emerald-100 bg-emerald-50/70"
+               }`}
+             >
+               <h3 className="text-xl font-semibold text-slate-900">
+                 {tool.tool}
+               </h3>
+               <p className="mt-2 text-sm leading-7 text-slate-700">
+                 {tool.category}
+               </p>
+ 
+               <div className="mt-6 space-y-3">
+                 {tool.plans.map((plan) => (
+                   <div
+                     key={plan.name}
+                     className="flex items-center justify-between rounded-xl border border-white/70 bg-white/75 px-4 py-3 text-sm"
+                   >
+                     <span className="text-slate-700">
+                       {plan.name}
+                     </span>
+                     <span className="font-semibold text-slate-900">
+                       ${plan.monthlyPrice}/mo
+                     </span>
+                   </div>
+                 ))}
+               </div>
+             </div>
+           ))}
+         </div>
       </section>
     </main>
   );

@@ -126,7 +126,7 @@ export default function SpendForm() {
           Audit Workspace
         </h2>
 
-        <p className="max-w-2xl text-slate-600">
+        <p className="max-w-2xl text-slate-700">
           Analyze your organization&apos;s AI
           tooling spend and identify
           optimization opportunities across
@@ -159,11 +159,15 @@ export default function SpendForm() {
 
           <div className="grid gap-5 md:grid-cols-2">
             <div className="space-y-2">
-              <label className="text-sm text-slate-600">
+              <label
+                htmlFor={`tool-${index}`}
+                className="text-sm font-medium text-slate-700"
+              >
                 Tool
               </label>
 
               <select
+                id={`tool-${index}`}
                 className="w-full rounded-lg border border-emerald-100 bg-white p-3 text-slate-900"
                 value={tool.tool}
                 onChange={(e) =>
@@ -190,11 +194,15 @@ export default function SpendForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-slate-600">
+              <label
+                htmlFor={`plan-${index}`}
+                className="text-sm font-medium text-slate-700"
+              >
                 Plan
               </label>
 
               <select
+                id={`plan-${index}`}
                 className="w-full rounded-lg border border-emerald-100 bg-white p-3 text-slate-900"
                 value={tool.plan}
                 onChange={(e) =>
@@ -229,11 +237,15 @@ export default function SpendForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-slate-600">
+              <label
+                htmlFor={`spend-${index}`}
+                className="text-sm font-medium text-slate-700"
+              >
                 Monthly Spend ($)
               </label>
 
               <input
+                id={`spend-${index}`}
                 type="number"
                 min="0"
                 placeholder="20"
@@ -252,11 +264,15 @@ export default function SpendForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-slate-600">
+              <label
+                htmlFor={`seats-${index}`}
+                className="text-sm font-medium text-slate-700"
+              >
                 Seats
               </label>
 
               <input
+                id={`seats-${index}`}
                 type="number"
                 min="0"
                 placeholder="5"
@@ -275,16 +291,20 @@ export default function SpendForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-slate-600">
+              <label
+                htmlFor={`teamSize-${index}`}
+                className="text-sm font-medium text-slate-700"
+              >
                 Team Size
               </label>
 
-              <p className="text-xs text-slate-500">
+              <p className="text-xs text-slate-600">
                 Total people using AI tools
                 across the team
               </p>
 
               <input
+                id={`teamSize-${index}`}
                 type="number"
                 min="0"
                 placeholder="10"
@@ -303,11 +323,15 @@ export default function SpendForm() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm text-slate-600">
+              <label
+                htmlFor={`useCase-${index}`}
+                className="text-sm font-medium text-slate-700"
+              >
                 Use Case
               </label>
 
               <select
+                id={`useCase-${index}`}
                 className="w-full rounded-lg border border-emerald-100 bg-white p-3 text-slate-900"
                 value={tool.useCase}
                 onChange={(e) =>
@@ -348,12 +372,12 @@ export default function SpendForm() {
       ))}
 
       <div className="flex flex-wrap gap-4">
-        <button
-          onClick={addTool}
-          className="rounded-xl border border-sky-200 bg-white/70 px-6 py-3 font-medium text-slate-700 transition hover:bg-white"
-        >
-          Add Tool
-        </button>
+          <button
+            onClick={addTool}
+            className="rounded-xl border border-sky-200 bg-white/70 px-6 py-3 font-medium text-slate-800 transition hover:bg-white"
+          >
+            Add Tool
+          </button>
 
         <button
           onClick={handleAudit}

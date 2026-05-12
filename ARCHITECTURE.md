@@ -7,6 +7,11 @@
 **Testing:** Vitest  
 **CI/CD:** GitHub Actions, Husky pre-commit  
 
+### Justification of Stack
+- **Next.js (App Router):** Chosen for its superior performance patterns (RSC), native support for dynamic routing (essential for `/audit/[id]`), and fast serverless deployment on Vercel. It allows for a clean separation between sensitive server-side logic (API keys) and interactive client-side form states.
+- **TypeScript:** Utilized strictly throughout the project to ensure type safety, catch potential audit calculation errors at compile-time, and provide clear documentation for the deterministic rule engine.
+- **Tailwind CSS & shadcn/ui:** Hand-coded UI using utility-first styling and headless primitives. No website builders or pre-built admin templates were used.
+
 ---
 
 ## System Flow

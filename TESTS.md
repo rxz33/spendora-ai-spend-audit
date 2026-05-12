@@ -36,6 +36,6 @@ npm run test -- --coverage
 GitHub Actions runs tests on every push to `main`:
 - Lint: `npm run lint`
 - Build: `npm run build`  
-- Tests: `npm run test` (currently missing, see TODO below)
+- Tests: `npm run test`
 
 **TODO:** Add `npm run test` to CI pipeline in `.github/workflows/ci.yml`

@@ -32,7 +32,7 @@ Reversing this decision improved both code quality and conceptual clarity. It al
 
 If I had an additional week, I would focus less on expanding the deterministic audit logic itself and more on turning the product into a genuinely useful operational tool for engineering managers and startup founders.
 
-The first feature I would build is persistent shareable audit reports with public URLs, allowing teams to save, compare, and revisit historical audits over time. This would make the product more collaborative and more realistic as an internal procurement tool.
+The first feature I would build is a **PDF Export of the full report** (a bonus MVP feature). While shareable URLs (which I implemented in Week 1) are great for quick reviews, many procurement and finance teams still operate on PDFs for their internal approval workflows. Adding a professional, print-optimized PDF generation layer would significantly increase the tool's credibility in formal business settings.
 
 Second, I would implement organization-level analytics dashboards. Instead of a single audit session, teams could track:
 - AI spend growth over time

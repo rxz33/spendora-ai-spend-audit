@@ -129,7 +129,7 @@ export default async function AuditPage({
     <main className="min-h-screen text-slate-900">
       <section className="mx-auto max-w-6xl px-6 py-14 md:py-16">
         <div className="rounded-[2rem] border border-white/70 bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(245,243,255,0.98))] p-8 shadow-[0_24px_80px_rgba(148,163,184,0.16)] backdrop-blur-xl md:p-10">
-          <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+          <p className="text-sm font-semibold uppercase tracking-[0.28em] text-sky-800">
             Shared audit
           </p>
           <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
@@ -190,7 +190,7 @@ export default async function AuditPage({
       <section className="mx-auto max-w-6xl px-6 pb-20">
         <div className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
           <div className="rounded-[2rem] border border-white/70 bg-white/78 p-6 shadow-[0_24px_80px_rgba(148,163,184,0.13)] backdrop-blur-xl md:p-8">
-            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-sky-800">
               Per-tool breakdown
             </p>
             <h2 className="mt-2 text-3xl font-bold text-slate-950">
@@ -269,7 +269,7 @@ export default async function AuditPage({
           <div className="space-y-6">
             {audit.summary && (
               <section className="rounded-[2rem] border border-white/70 bg-white/78 p-6 shadow-[0_24px_80px_rgba(148,163,184,0.13)] backdrop-blur-xl md:p-8">
-                <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+                <p className="text-sm font-semibold uppercase tracking-[0.28em] text-sky-800">
                   AI summary
                 </p>
                 <p className="mt-4 text-lg leading-8 text-slate-600">
@@ -280,7 +280,7 @@ export default async function AuditPage({
 
             {isHighSavings && (
               <section className="rounded-[2rem] border border-violet-200 bg-[linear-gradient(135deg,rgba(224,242,254,0.72),rgba(237,233,254,0.9))] p-6 shadow-[0_24px_80px_rgba(148,163,184,0.13)] md:p-8">
-                <p className="text-sm uppercase tracking-[0.28em] text-violet-700/70">
+                <p className="text-sm font-semibold uppercase tracking-[0.28em] text-violet-800">
                   High-savings case
                 </p>
                 <h3 className="mt-2 text-3xl font-bold text-slate-950">
@@ -301,7 +301,7 @@ export default async function AuditPage({
             )}
 
             <section className="rounded-[2rem] border border-white/70 bg-white/78 p-6 shadow-[0_24px_80px_rgba(148,163,184,0.13)] backdrop-blur-xl md:p-8">
-              <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-sky-800">
                 Built with Spendora
               </p>
               <p className="mt-4 leading-7 text-slate-600">
