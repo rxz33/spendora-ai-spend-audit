@@ -190,10 +190,10 @@ export default function AuditResults({
 
   return (
     <div className="mt-12 space-y-6 text-slate-900">
-      <section className="rounded-3xl border border-sky-200/70 bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(245,243,255,0.98))] p-6 shadow-sm md:p-8">
+      <section className="rounded-3xl border border-emerald-200/70 bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(245,243,255,0.98))] p-6 shadow-sm md:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+            <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
               Audit Results
             </p>
             <h2 className="mt-3 text-4xl font-bold leading-tight text-slate-900 md:text-5xl">
@@ -211,11 +211,11 @@ export default function AuditResults({
           </div>
 
           <div className="grid w-full gap-4 sm:grid-cols-3 lg:max-w-2xl">
-            <div className="rounded-3xl border border-sky-200/70 bg-white/88 p-6">
+            <div className="rounded-3xl border border-emerald-200/70 bg-white/88 p-6">
               <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                 Monthly
               </p>
-              <p className="mt-3 text-5xl font-bold tracking-tight text-sky-600 md:text-6xl">
+              <p className="mt-3 text-5xl font-bold tracking-tight text-emerald-600 md:text-6xl">
                 {formatCurrency(totalSavings)}
               </p>
               <p className="mt-2 text-sm text-slate-500">
@@ -233,7 +233,7 @@ export default function AuditResults({
                 if you keep this stack unchanged
               </p>
             </div>
-            <div className="rounded-3xl border border-sky-200/70 bg-white/88 p-6">
+            <div className="rounded-3xl border border-emerald-200/70 bg-white/88 p-6">
               <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                 Biggest move
               </p>
@@ -254,7 +254,7 @@ export default function AuditResults({
         </div>
 
         {biggestOpportunity && (
-          <div className="mt-6 rounded-3xl border border-sky-200/70 bg-white/82 p-6">
+          <div className="mt-6 rounded-3xl border border-emerald-200/70 bg-white/82 p-6">
             <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
               Start here
             </p>
@@ -268,7 +268,7 @@ export default function AuditResults({
                 </p>
               </div>
               <div className="text-left md:text-right">
-                <p className="text-4xl font-bold tracking-tight text-sky-600">
+                <p className="text-4xl font-bold tracking-tight text-emerald-600">
                   {formatCurrency(
                     biggestOpportunity.monthlySavings
                   )}
@@ -283,10 +283,10 @@ export default function AuditResults({
         )}
       </section>
 
-      <section className="rounded-3xl border border-sky-200/70 bg-white/75 p-6 shadow-sm md:p-8">
+      <section className="rounded-3xl border border-emerald-200/70 bg-white/75 p-6 shadow-sm md:p-8">
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+            <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
               Share Audit
             </p>
             <h3 className="mt-2 text-2xl font-semibold text-slate-900">
@@ -340,18 +340,18 @@ export default function AuditResults({
             href="https://credex.rocks"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-6 inline-block rounded-xl bg-sky-500 px-5 py-3 font-medium text-white transition hover:bg-sky-600"
+            className="mt-6 inline-block rounded-xl bg-emerald-500 px-5 py-3 font-medium text-white transition hover:bg-emerald-600"
           >
             Talk to Credex
           </a>
         </section>
       )}
 
-      <section className="grid gap-6 xl:grid-cols-[1.15fr_0.85fr]">
-        <div className="rounded-3xl border border-sky-200/70 bg-white/75 p-6 shadow-sm md:p-8">
+      <section className="flex flex-col gap-6">
+        <div className="rounded-3xl border border-emerald-200/70 bg-white/75 p-6 shadow-sm md:p-8">
           <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
             <div>
-              <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+              <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
                 Per-Tool Breakdown
               </p>
               <h3 className="mt-2 text-2xl font-semibold text-slate-900">
@@ -371,7 +371,7 @@ export default function AuditResults({
               return (
                 <article
                   key={index}
-                  className="rounded-2xl border border-sky-200/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(245,243,255,0.9))] p-5"
+                  className="rounded-2xl border border-emerald-200/70 bg-[linear-gradient(135deg,rgba(255,255,255,0.92),rgba(245,243,255,0.9))] p-5"
                 >
                   <div className="flex flex-col gap-5">
                     <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
@@ -387,7 +387,7 @@ export default function AuditResults({
                       <div
                         className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${
                           hasSavings
-                            ? "bg-sky-100 text-sky-700"
+                            ? "bg-emerald-100 text-sky-700"
                             : "bg-violet-100 text-violet-700"
                         }`}
                       >
@@ -400,7 +400,7 @@ export default function AuditResults({
                     </div>
 
                     <div className="grid gap-3 md:grid-cols-3">
-                      <div className="rounded-xl border border-sky-100 bg-white p-4">
+                      <div className="rounded-xl border border-emerald-100 bg-white p-4">
                         <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                           You pay now
                         </p>
@@ -412,7 +412,7 @@ export default function AuditResults({
                         </p>
                       </div>
 
-                      <div className="rounded-xl border border-sky-100 bg-white p-4">
+                      <div className="rounded-xl border border-emerald-100 bg-white p-4">
                         <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                           We suggest
                         </p>
@@ -421,11 +421,11 @@ export default function AuditResults({
                         </p>
                       </div>
 
-                      <div className="rounded-xl border border-sky-100 bg-white p-4">
+                      <div className="rounded-xl border border-emerald-100 bg-white p-4">
                         <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                           You could save
                         </p>
-                        <p className="mt-2 text-3xl font-bold tracking-tight text-sky-600">
+                        <p className="mt-2 text-3xl font-bold tracking-tight text-emerald-600">
                           {formatCurrency(
                             result.monthlySavings
                           )}
@@ -440,7 +440,7 @@ export default function AuditResults({
                       </div>
                     </div>
 
-                    <div className="rounded-xl border border-sky-100 bg-white p-4">
+                    <div className="rounded-xl border border-emerald-100 bg-white p-4">
                       <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                         Why
                       </p>
@@ -456,8 +456,8 @@ export default function AuditResults({
         </div>
 
         <div className="space-y-6">
-          <section className="rounded-3xl border border-sky-200/70 bg-white/75 p-6 shadow-sm md:p-8">
-            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+          <section className="rounded-3xl border border-emerald-200/70 bg-white/75 p-6 shadow-sm md:p-8">
+            <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
               AI Summary
             </p>
             <p className="mt-4 text-lg leading-8 text-slate-600">
@@ -465,8 +465,8 @@ export default function AuditResults({
             </p>
           </section>
 
-          <section className="rounded-3xl border border-sky-200/70 bg-white/75 p-6 shadow-sm md:p-8">
-            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+          <section className="rounded-3xl border border-emerald-200/70 bg-white/75 p-6 shadow-sm md:p-8">
+            <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
               {isHighSavings
                 ? "Follow-Up"
                 : "Stay Updated"}
@@ -490,7 +490,7 @@ export default function AuditResults({
                 onChange={(e) =>
                   setLeadEmail(e.target.value)
                 }
-                className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
+                className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
               />
 
               <div className="grid gap-4 md:grid-cols-2">
@@ -503,7 +503,7 @@ export default function AuditResults({
                       e.target.value
                     )
                   }
-                  className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
+                  className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
                 />
                 <input
                   type="text"
@@ -512,7 +512,7 @@ export default function AuditResults({
                   onChange={(e) =>
                     setRole(e.target.value)
                   }
-                  className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
+                  className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
                 />
               </div>
 
@@ -535,7 +535,7 @@ export default function AuditResults({
                         )
                   )
                 }
-                className="w-full rounded-xl border border-sky-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
+                className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
               />
 
               <input
@@ -558,7 +558,7 @@ export default function AuditResults({
                 disabled={leadLoading}
                 className={`rounded-xl px-5 py-3 font-medium transition disabled:opacity-50 ${
                   isHighSavings
-                    ? "bg-sky-500 text-white hover:bg-sky-600"
+                    ? "bg-emerald-500 text-white hover:bg-emerald-600"
                     : "bg-violet-200 text-violet-900 hover:bg-violet-300"
                 }`}
               >
@@ -570,7 +570,7 @@ export default function AuditResults({
               </button>
 
               {leadSuccess && (
-                <p className="text-sm text-sky-600">
+                <p className="text-sm text-emerald-600">
                   {leadEmailSent
                     ? "Lead captured. The confirmation email is on its way."
                     : "Lead captured, but the confirmation email was not sent."}

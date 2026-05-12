@@ -138,7 +138,7 @@ export default function SpendForm() {
       {tools.map((tool, index) => (
         <div
           key={index}
-          className="rounded-2xl border border-sky-200/70 bg-white/75 p-6 shadow-sm backdrop-blur-sm"
+          className="rounded-2xl border border-emerald-200/70 bg-white/75 p-6 shadow-sm backdrop-blur-sm"
         >
           <div className="mb-6 flex items-center justify-between">
             <h3 className="text-xl font-semibold text-slate-900">
@@ -164,7 +164,7 @@ export default function SpendForm() {
               </label>
 
               <select
-                className="w-full rounded-lg border border-sky-100 bg-white p-3 text-slate-900"
+                className="w-full rounded-lg border border-emerald-100 bg-white p-3 text-slate-900"
                 value={tool.tool}
                 onChange={(e) =>
                   updateTool(
@@ -195,7 +195,7 @@ export default function SpendForm() {
               </label>
 
               <select
-                className="w-full rounded-lg border border-sky-100 bg-white p-3 text-slate-900"
+                className="w-full rounded-lg border border-emerald-100 bg-white p-3 text-slate-900"
                 value={tool.plan}
                 onChange={(e) =>
                   updateTool(
@@ -237,7 +237,7 @@ export default function SpendForm() {
                 type="number"
                 min="0"
                 placeholder="20"
-                className="w-full rounded-lg border border-sky-100 bg-white p-3 text-slate-900"
+                className="w-full rounded-lg border border-emerald-100 bg-white p-3 text-slate-900"
                 value={tool.monthlySpend}
                 onChange={(e) =>
                   updateTool(
@@ -260,7 +260,7 @@ export default function SpendForm() {
                 type="number"
                 min="0"
                 placeholder="5"
-                className="w-full rounded-lg border border-sky-100 bg-white p-3 text-slate-900"
+                className="w-full rounded-lg border border-emerald-100 bg-white p-3 text-slate-900"
                 value={tool.seats}
                 onChange={(e) =>
                   updateTool(
@@ -288,7 +288,7 @@ export default function SpendForm() {
                 type="number"
                 min="0"
                 placeholder="10"
-                className="w-full rounded-lg border border-sky-100 bg-white p-3 text-slate-900"
+                className="w-full rounded-lg border border-emerald-100 bg-white p-3 text-slate-900"
                 value={tool.teamSize}
                 onChange={(e) =>
                   updateTool(
@@ -308,7 +308,7 @@ export default function SpendForm() {
               </label>
 
               <select
-                className="w-full rounded-lg border border-sky-100 bg-white p-3 text-slate-900"
+                className="w-full rounded-lg border border-emerald-100 bg-white p-3 text-slate-900"
                 value={tool.useCase}
                 onChange={(e) =>
                   updateTool(
@@ -358,7 +358,7 @@ export default function SpendForm() {
         <button
           onClick={handleAudit}
           disabled={loading}
-          className="rounded-xl bg-sky-500 px-6 py-3 font-medium text-white transition hover:bg-sky-600 disabled:opacity-50"
+          className="rounded-xl bg-emerald-500 px-6 py-3 font-medium text-white transition hover:bg-emerald-600 disabled:opacity-50"
         >
           {loading
             ? "Generating Audit..."

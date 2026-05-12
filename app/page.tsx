@@ -80,7 +80,7 @@ export default function HomePage() {
         <div className="relative mx-auto max-w-6xl px-6 pb-20 pt-20 md:pb-28 md:pt-24">
           <div className="grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div className="max-w-3xl">
-              <p className="inline-flex rounded-full border border-sky-200 bg-white/80 px-4 py-1.5 text-sm font-medium text-sky-700 shadow-sm">
+              <p className="inline-flex rounded-full border border-emerald-200 bg-white/80 px-4 py-1.5 text-sm font-medium text-emerald-700 shadow-sm">
                 Spendora x Credex-style audit workflow
               </p>
 
@@ -95,14 +95,14 @@ export default function HomePage() {
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <button
                   onClick={scrollToForm}
-                  className="rounded-2xl bg-sky-500 px-7 py-3.5 text-base font-semibold text-white shadow-[0_14px_32px_rgba(14,165,233,0.24)] transition hover:bg-sky-600"
+                  className="rounded-2xl bg-emerald-500 px-7 py-3.5 text-base font-semibold text-white shadow-[0_14px_32px_rgba(14,165,233,0.24)] transition hover:bg-emerald-600"
                 >
                   Start free audit
                 </button>
 
                 <button
                   onClick={scrollToPricing}
-                  className="rounded-2xl border border-sky-200 bg-white/80 px-7 py-3.5 text-base font-semibold text-slate-700 transition hover:bg-white"
+                  className="rounded-2xl border border-emerald-200 bg-white/80 px-7 py-3.5 text-base font-semibold text-slate-700 transition hover:bg-white"
                 >
                   Browse pricing data
                 </button>
@@ -111,7 +111,7 @@ export default function HomePage() {
 
             <div className="rounded-[2rem] border border-white/70 bg-white/70 p-6 shadow-[0_24px_80px_rgba(148,163,184,0.18)] backdrop-blur-xl md:p-8">
               <div className="grid gap-4 sm:grid-cols-2">
-                <div className="rounded-2xl border border-sky-100 bg-sky-50/70 p-5">
+                <div className="rounded-2xl border border-emerald-100 bg-emerald-50/70 p-5">
                   <p className="text-sm font-medium text-slate-500">
                     What you get
                   </p>
@@ -135,7 +135,7 @@ export default function HomePage() {
                   </p>
                 </div>
 
-                <div className="rounded-2xl border border-sky-100 bg-white p-5 sm:col-span-2">
+                <div className="rounded-2xl border border-emerald-100 bg-white p-5 sm:col-span-2">
                   <p className="text-sm font-medium text-slate-500">
                     Best for
                   </p>
@@ -170,7 +170,7 @@ export default function HomePage() {
       <section ref={pricingRef} className="mx-auto max-w-6xl px-6 pb-20 pt-8 md:pb-24">
         <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="text-sm uppercase tracking-[0.28em] text-sky-700/70">
+            <p className="text-sm uppercase tracking-[0.28em] text-emerald-700/70">
               Pricing data
             </p>
             <h2 className="mt-2 text-4xl font-bold text-slate-950">
@@ -188,10 +188,10 @@ export default function HomePage() {
               key={tool.name}
               className={`rounded-[1.7rem] border p-6 shadow-sm backdrop-blur-sm ${
                 index % 3 === 0
-                  ? "border-sky-200 bg-white/78"
+                  ? "border-emerald-200 bg-white/78"
                   : index % 3 === 1
                   ? "border-violet-200 bg-violet-50/70"
-                  : "border-sky-100 bg-sky-50/70"
+                  : "border-emerald-100 bg-emerald-50/70"
               }`}
             >
               <h3 className="text-xl font-semibold text-slate-900">
