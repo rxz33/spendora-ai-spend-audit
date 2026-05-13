@@ -1,6 +1,8 @@
 # Spendora — AI Spend Audit
 
-**Free tool** that helps engineering teams find hidden savings in their AI tool subscriptions.
+Most startups accumulate AI subscriptions gradually and rarely benchmark whether their current stack still makes financial sense. Spendora audits that spend and surfaces realistic optimization opportunities.
+
+**Free AI spend audit tool** that helps engineering teams identify wasted spend across subscriptions, seats, and overlapping tooling.
 
 🔗 **Live:** https://spendora-ai-spend-audit.vercel.app/
 
@@ -11,7 +13,23 @@
 1. **Input** AI tools you pay for (Cursor, Claude, ChatGPT, etc.) and current spend
 2. **Get audit** in 60 seconds with specific recommendations
 3. **See savings** potential + share results with your team
-4. **Optional:** Capture audit for follow-up (Credex handles commission sales)
+4. **Optional:** Save the audit for follow-up recommendations and procurement support
+
+---
+
+## Product Screenshots
+
+### Landing Experience
+<img src="./screenshots/landing-page.png" width="100%" />
+
+### Audit Workspace
+<img src="./screenshots/audit-form.png" width="100%" />
+
+### Audit Results Dashboard
+<img src="./screenshots/audit-results.png" width="100%" />
+
+### Per-Tool Savings Breakdown
+<img src="./screenshots/tool-breakdown.png" width="100%" />
 
 ---
 
@@ -24,7 +42,7 @@
 - **Lead capture** with transactional email confirmation
 - **Honeypot abuse protection**
 - **localStorage persistence** (form saves between sessions)
-- **100% TypeScript** with full test coverage
+- **Fully typed TypeScript** codebase with Vitest audit engine tests
 
 ---
 
