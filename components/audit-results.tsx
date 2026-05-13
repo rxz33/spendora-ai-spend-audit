@@ -70,7 +70,6 @@ export default function AuditResults({
       null
     );
   const isHighSavings = totalSavings >= 500;
-  const isLowSavings = totalSavings < 100;
 
   const summary =
     totalSavings > 0

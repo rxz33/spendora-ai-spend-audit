@@ -38,7 +38,7 @@ export default function SpendForm() {
   const [results, setResults] = useState<AuditRecommendation[]>([]);
   const [stackInsights, setStackInsights] =
     useState<StackAuditInsights | null>(null);
-  const [summary, setSummary] = useState("");
+  const [, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
 
   const addTool = () => {
