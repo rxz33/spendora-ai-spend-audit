@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { AutoFitText } from "@/components/auto-fit-text";
 import {
   type AuditRecommendation,
   type StackAuditInsights
@@ -228,9 +229,15 @@ export default function AuditResults({
               <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                 Monthly
               </p>
-              <p className="mt-3 text-[3.5rem] md:text-[4rem] font-bold tracking-[-0.04em] leading-none text-emerald-600">
-                {formatCurrency(totalSavings)}
-              </p>
+              <div className="mt-3">
+                <AutoFitText
+                  className="font-bold tracking-[-0.04em] leading-none text-emerald-600"
+                  maxRem={2.25}
+                  maxRemMd={2.75}
+                >
+                  {formatCurrency(totalSavings)}
+                </AutoFitText>
+              </div>
               <p className="mt-2 text-sm text-slate-600">
                 total savings opportunity
               </p>
@@ -239,9 +246,15 @@ export default function AuditResults({
               <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                 Annual
               </p>
-              <p className="mt-3 text-[3.5rem] md:text-[4rem] font-bold tracking-[-0.04em] leading-none text-violet-600">
-                {formatCurrency(annualSavings)}
-              </p>
+              <div className="mt-3">
+                <AutoFitText
+                  className="font-bold tracking-[-0.04em] leading-none text-violet-600"
+                  maxRem={2.25}
+                  maxRemMd={2.75}
+                >
+                  {formatCurrency(annualSavings)}
+                </AutoFitText>
+              </div>
               <p className="mt-2 text-sm text-slate-600">
                 if you keep this stack unchanged
               </p>

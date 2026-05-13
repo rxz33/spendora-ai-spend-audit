@@ -1,5 +1,7 @@
 import { Metadata } from "next";
 import Link from "next/link";
+
+import { AutoFitText } from "@/components/auto-fit-text";
 import { getSupabaseClient } from "@/server/supabase";
 
 interface AuditData {
@@ -163,9 +165,15 @@ export default async function AuditPage({
                 <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                   Monthly
                 </p>
-                <p className="mt-3 text-5xl font-bold tracking-tight text-sky-600 md:text-6xl">
-                  ${audit.monthly_savings}
-                </p>
+                <div className="mt-3">
+                  <AutoFitText
+                    className="font-bold tracking-tight text-sky-600"
+                    maxRem={2.25}
+                    maxRemMd={2.75}
+                  >
+                    {`$${audit.monthly_savings}`}
+                  </AutoFitText>
+                </div>
                 <p className="mt-2 text-sm text-slate-500">
                   total savings opportunity
                 </p>
@@ -174,9 +182,15 @@ export default async function AuditPage({
                 <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                   Annual
                 </p>
-                <p className="mt-3 text-5xl font-bold tracking-tight text-violet-600 md:text-6xl">
-                  ${audit.annual_savings.toFixed(0)}
-                </p>
+                <div className="mt-3">
+                  <AutoFitText
+                    className="font-bold tracking-tight text-violet-600"
+                    maxRem={2.25}
+                    maxRemMd={2.75}
+                  >
+                    {`$${audit.annual_savings.toFixed(0)}`}
+                  </AutoFitText>
+                </div>
                 <p className="mt-2 text-sm text-slate-500">
                   if nothing changes
                 </p>
