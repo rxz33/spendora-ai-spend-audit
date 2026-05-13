@@ -2,15 +2,10 @@
 
 import { useState } from "react";
 
-interface AuditResult {
-  currentTool: string;
-  currentPlan: string;
-  currentSpend: number;
-  recommendation: string;
-  monthlySavings: number;
-  annualSavings: number;
-  reason: string;
-}
+import {
+  type AuditRecommendation,
+  type StackAuditInsights
+} from "@/types/audit";
 
 function formatCurrency(value: number) {
   return `$${value.toFixed(0)}`;
@@ -18,10 +13,10 @@ function formatCurrency(value: number) {
 
 export default function AuditResults({
   results,
-  summary,
+  insights,
 }: {
-  results: AuditResult[];
-  summary: string;
+  results: AuditRecommendation[];
+  insights: StackAuditInsights;
 }) {
   const [leadEmail, setLeadEmail] =
     useState("");
@@ -60,12 +55,12 @@ export default function AuditResults({
     (result) => result.monthlySavings > 0
   );
   const biggestOpportunity =
-    optimizedTools.reduce<AuditResult | null>(
+    optimizedTools.reduce<AuditRecommendation | null>(
       (best, result) => {
         if (
           !best ||
           result.monthlySavings >
-            best.monthlySavings
+          best.monthlySavings
         ) {
           return result;
         }
@@ -76,6 +71,11 @@ export default function AuditResults({
     );
   const isHighSavings = totalSavings >= 500;
   const isLowSavings = totalSavings < 100;
+
+  const summary =
+    totalSavings > 0
+      ? `Our audit identified ${formatCurrency(totalSavings)} in potential monthly savings opportunities, primarily through ${biggestOpportunity?.currentTool ?? "stack optimization"} improvements.`
+      : "Our audit found no major optimization opportunities. Your current AI tooling setup appears operationally reasonable.";
 
   const handleShareAudit = async () => {
     setShareLoading(true);
@@ -156,7 +156,7 @@ export default function AuditResults({
       if (!response.ok) {
         throw new Error(
           data.error ||
-            "Failed to capture lead"
+          "Failed to capture lead"
         );
       }
 
@@ -168,7 +168,7 @@ export default function AuditResults({
       if (data.emailSent === false) {
         setLeadError(
           data.error ||
-            "Lead saved, but confirmation email could not be sent."
+          "Lead saved, but confirmation email could not be sent."
         );
       }
 
@@ -193,20 +193,34 @@ export default function AuditResults({
       <section className="rounded-3xl border border-emerald-200/70 bg-[linear-gradient(135deg,rgba(239,246,255,0.95),rgba(245,243,255,0.98))] p-6 shadow-sm md:p-8">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
           <div className="max-w-3xl">
-            <p className="text-sm font-semibold uppercase tracking-[0.28em] text-emerald-800">
-              Audit Results
-            </p>
+            <div className="flex items-center gap-3">
+              <p className="text-sm font-semibold uppercase tracking-[0.28em] text-emerald-800">
+                Audit Results
+              </p>
+              {insights.healthStatus && (
+                <span className={`rounded-full px-2.5 py-0.5 text-xs font-bold uppercase tracking-wider ${insights.healthStatus === 'optimized' || insights.healthStatus === 'efficient'
+                  ? 'bg-emerald-100 text-emerald-700'
+                  : insights.healthStatus === 'opportunities'
+                    ? 'bg-amber-100 text-amber-700'
+                    : 'bg-rose-100 text-rose-700'
+                  }`}>
+                  {insights.healthStatusLabel || insights.healthStatus}
+                </span>
+              )}
+            </div>
             <h2 className="mt-3 text-4xl font-bold leading-tight text-slate-900 md:text-5xl">
-              {isLowSavings
+              {totalSavings < 10
                 ? "Your AI spend looks healthy"
-                : "You are leaving money on the table"}
+                : totalSavings < 50
+                  ? "This stack has optimization opportunities"
+                  : "You are leaving money on the table"}
             </h2>
             <p className="mt-4 max-w-2xl text-lg leading-8 text-slate-700">
-              {isHighSavings
+              {insights.healthStatus === 'overspending' || insights.healthStatus === 'inefficient'
                 ? "These savings are large enough to act on now."
-                : isLowSavings
-                ? "No major pricing mistakes. This setup looks reasonable."
-                : "A few changes could lower recurring spend without adding much friction."}
+                : insights.healthStatus === 'optimized' || insights.healthStatus === 'efficient'
+                  ? "No major pricing mistakes. This setup looks reasonable."
+                  : "A few changes could lower recurring spend without adding much friction."}
             </p>
           </div>
 
@@ -215,7 +229,7 @@ export default function AuditResults({
               <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                 Monthly
               </p>
-              <p className="mt-3 text-5xl font-bold tracking-tight text-emerald-600 md:text-6xl">
+              <p className="mt-3 text-[3.5rem] md:text-[4rem] font-bold tracking-[-0.04em] leading-none text-emerald-600">
                 {formatCurrency(totalSavings)}
               </p>
               <p className="mt-2 text-sm text-slate-600">
@@ -226,7 +240,7 @@ export default function AuditResults({
               <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
                 Annual
               </p>
-              <p className="mt-3 text-5xl font-bold tracking-tight text-violet-600 md:text-6xl">
+              <p className="mt-3 text-[3.5rem] md:text-[4rem] font-bold tracking-[-0.04em] leading-none text-violet-600">
                 {formatCurrency(annualSavings)}
               </p>
               <p className="mt-2 text-sm text-slate-600">
@@ -245,8 +259,8 @@ export default function AuditResults({
               <p className="mt-2 text-sm text-slate-500">
                 {biggestOpportunity
                   ? `${formatCurrency(
-                      biggestOpportunity.monthlySavings
-                    )}/mo is the clearest win`
+                    biggestOpportunity.monthlySavings
+                  )}/mo is the clearest win`
                   : "no major waste detected"}
               </p>
             </div>
@@ -384,18 +398,27 @@ export default function AuditResults({
                         </p>
                       </div>
 
-                      <div
-                        className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${
-                          hasSavings
+                      <div className="flex items-center gap-3">
+                        <div
+                          className={`inline-flex rounded-full px-3 py-1 text-sm font-medium ${hasSavings
                             ? "bg-emerald-100 text-sky-700"
                             : "bg-violet-100 text-violet-700"
-                        }`}
-                      >
-                        {hasSavings
-                          ? `${formatCurrency(
+                            }`}
+                        >
+                          {hasSavings
+                            ? `${formatCurrency(
                               result.monthlySavings
                             )}/mo`
-                          : "No major savings found"}
+                            : "No major savings found"}
+                        </div>
+                        {result.severity && result.severity !== 'informational' && (
+                          <span className={`rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider ${result.severity === 'critical' || result.severity === 'high'
+                            ? 'bg-rose-100 text-rose-700'
+                            : 'bg-amber-100 text-amber-700'
+                            }`}>
+                            {result.severity}
+                          </span>
+                        )}
                       </div>
                     </div>
 
@@ -441,12 +464,24 @@ export default function AuditResults({
                     </div>
 
                     <div className="rounded-xl border border-emerald-100 bg-white p-4">
-                      <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
-                        Why
-                      </p>
+                      <div className="flex items-center justify-between">
+                        <p className="text-xs uppercase tracking-[0.22em] text-slate-500">
+                          Why
+                        </p>
+                        {result.confidenceScore && (
+                          <span className="text-[10px] font-medium text-slate-400">
+                            Confidence: {result.confidenceScore}%
+                          </span>
+                        )}
+                      </div>
                       <p className="mt-2 text-base leading-7 text-slate-600">
                         {result.reason}
                       </p>
+                      {result.transparency && (
+                        <p className="mt-3 border-t border-slate-50 pt-3 text-xs italic text-slate-400">
+                          Analysis: {result.transparency}
+                        </p>
+                      )}
                     </div>
                   </div>
                 </article>
@@ -561,13 +596,13 @@ export default function AuditResults({
                       e.target.value === ""
                         ? ""
                         : String(
-                            Math.max(
-                              Number(
-                                e.target.value
-                              ),
-                              0
-                            )
+                          Math.max(
+                            Number(
+                              e.target.value
+                            ),
+                            0
                           )
+                        )
                     )
                   }
                   className="w-full rounded-xl border border-emerald-100 bg-white px-4 py-3 text-slate-900 placeholder:text-slate-400"
@@ -593,17 +628,16 @@ export default function AuditResults({
               <button
                 onClick={handleLeadCapture}
                 disabled={leadLoading}
-                className={`rounded-xl px-5 py-3 font-medium transition disabled:opacity-50 ${
-                  isHighSavings
-                    ? "bg-emerald-500 text-white hover:bg-emerald-600"
-                    : "bg-violet-200 text-violet-900 hover:bg-violet-300"
-                }`}
+                className={`rounded-xl px-5 py-3 font-medium transition disabled:opacity-50 ${isHighSavings
+                  ? "bg-emerald-500 text-white hover:bg-emerald-600"
+                  : "bg-violet-200 text-violet-900 hover:bg-violet-300"
+                  }`}
               >
                 {leadLoading
                   ? "Submitting..."
                   : isHighSavings
-                  ? "Request follow-up"
-                  : "Notify me"}
+                    ? "Request follow-up"
+                    : "Notify me"}
               </button>
 
               {leadSuccess && (

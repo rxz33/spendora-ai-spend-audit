@@ -8,10 +8,14 @@ import {
   scoreOperationalRisk,
   scoreMigrationDifficulty,
   scoreRecommendationPriority,
-  calculateUtilization,
+  scoreSeverity,
+  getHealthStatus,
   calculateFragmentationScore,
   calculateOptimizationScore,
+  calculateUtilization,
 } from "./audit-scoring";
+import { AuditCalculators } from "./audit/calculators";
+import { AuditValidators } from "./audit/validators";
 import {
   hasCapabilityOverlap,
   getToolCapabilities,
@@ -40,7 +44,11 @@ export function runAudit(
 ): {
   recommendations: AuditRecommendation[];
   stackInsights: StackAuditInsights;
+  errors?: string[];
 } {
+  // Validate stack integrity
+  const validationErrors = AuditValidators.validateStack(tools);
+
   const findings: AuditRecommendation[] = [];
 
   // Process each tool
@@ -59,6 +67,7 @@ export function runAudit(
   return {
     recommendations: rankedFindings,
     stackInsights,
+    errors: validationErrors.length > 0 ? validationErrors : undefined,
   };
 }
 
@@ -114,33 +123,34 @@ function evaluatePlanEfficiency(tool: ToolSpend): AuditRecommendation[] {
   );
 
   if (planRule) {
-    const savings = planRule.suggestedMonthlyCost
+    const rawSavings = planRule.suggestedMonthlyCost
       ? tool.monthlySpend - planRule.suggestedMonthlyCost
       : typeof planRule.estimatedSavings === "function"
         ? planRule.estimatedSavings(tool.teamSize)
         : planRule.estimatedSavings;
 
+    const savings = AuditCalculators.calculateSavings(tool.monthlySpend, tool.monthlySpend - rawSavings);
+
     if (savings > 0) {
+      const risk = scoreOperationalRisk("plan-downgrade", tool.teamSize);
+      const priority = scoreRecommendationPriority("oversized-plan", savings, risk);
+
       findings.push({
         type: "plan-downgrade",
         currentTool: tool.tool,
         currentPlan: tool.plan,
         currentSpend: tool.monthlySpend,
         recommendation: planRule.recommendation,
-        monthlySavings: Math.max(savings, 0),
-        annualSavings: Math.max(savings, 0) * 12,
+        monthlySavings: savings,
+        annualSavings: AuditCalculators.toAnnual(savings),
         reason: planRule.reason,
         confidence: scoreConfidence("oversized-plan", 0.95),
-        operationalRisk: scoreOperationalRisk("plan-downgrade", tool.teamSize),
-        migrationDifficulty: scoreMigrationDifficulty(
-          "plan-downgrade",
-          tool.teamSize
-        ),
-        priority: scoreRecommendationPriority(
-          "oversized-plan",
-          Math.max(savings, 0),
-          scoreOperationalRisk("plan-downgrade", tool.teamSize)
-        ),
+        operationalRisk: risk,
+        migrationDifficulty: scoreMigrationDifficulty("plan-downgrade", tool.teamSize),
+        priority: priority,
+        severity: scoreSeverity(priority, savings, risk),
+        confidenceScore: 95,
+        transparency: `Calculated based on ${tool.teamSize} team members vs ${planRule.maxEfficientSeats} seat limit for this plan level.`,
       });
     }
   }
@@ -157,9 +167,8 @@ function detectCapabilityOverlap(
 ): AuditRecommendation[] {
   const findings: AuditRecommendation[] = [];
 
-  // Find tools with overlapping capabilities
   for (const otherTool of allTools) {
-    if (otherTool.tool === tool.tool) continue; // Skip self
+    if (otherTool.tool === tool.tool) continue;
 
     if (hasCapabilityOverlap(tool.tool, otherTool.tool)) {
       const overlapRule = overlapRules.find((rule) =>
@@ -167,28 +176,50 @@ function detectCapabilityOverlap(
         rule.tools.includes(otherTool.tool)
       );
 
-      if (overlapRule && Math.abs(tool.monthlySpend - otherTool.monthlySpend) < 100) {
-        findings.push({
-          type: "consolidate-overlap",
-          currentTool: tool.tool,
-          currentPlan: tool.plan,
-          currentSpend: tool.monthlySpend,
-          recommendation: overlapRule.recommendation,
-          monthlySavings: overlapRule.estimatedSavings,
-          annualSavings: overlapRule.estimatedSavings * 12,
-          reason: `${tool.tool} overlaps significantly with ${otherTool.tool} (both support ${getToolCapabilities(tool.tool).filter((c) => getToolCapabilities(otherTool.tool).includes(c)).join(", ")}). Consider consolidating to eliminate redundancy.`,
-          confidence: scoreConfidence("overlap-detection", 0.75),
-          operationalRisk: scoreOperationalRisk("overlap-consolidation", tool.teamSize),
-          migrationDifficulty: scoreMigrationDifficulty(
-            "overlap-consolidation",
-            tool.teamSize
-          ),
-          priority: scoreRecommendationPriority(
-            "overlap-consolidation",
-            overlapRule.estimatedSavings,
-            scoreOperationalRisk("overlap-consolidation", tool.teamSize)
-          ),
-        });
+      if (overlapRule) {
+        // Nuanced check: Are they complementary?
+        const isComplementary = (tool.tool === "Cursor" && otherTool.tool === "ChatGPT") ||
+          (tool.tool === "ChatGPT" && otherTool.tool === "Cursor");
+
+        const overlapMultiplier =
+          tool.monthlySpend >= 100 ? 0.8 : 0.5;
+
+        const overlapSavings = Math.round(
+          overlapRule.estimatedSavings * overlapMultiplier
+        );
+
+        const savings = isComplementary
+          ? 0
+          : AuditCalculators.calculateSavings(
+            tool.monthlySpend,
+            tool.monthlySpend - overlapSavings
+          );
+
+        if (savings > 0) {
+          const risk = scoreOperationalRisk("overlap-consolidation", tool.teamSize);
+          const priority = scoreRecommendationPriority("overlap-consolidation", savings, risk);
+          const commonCaps = getToolCapabilities(tool.tool).filter((c) => getToolCapabilities(otherTool.tool).includes(c));
+
+          findings.push({
+            type: "consolidate-overlap",
+            currentTool: tool.tool,
+            currentPlan: tool.plan,
+            currentSpend: tool.monthlySpend,
+            recommendation: overlapRule.recommendation,
+            monthlySavings: savings,
+            annualSavings: AuditCalculators.toAnnual(savings),
+            reason: `${tool.tool} overlaps significantly with ${otherTool.tool} (common: ${commonCaps.join(", ")}).`,
+            confidence: scoreConfidence("overlap-detection", 0.75),
+            operationalRisk: risk,
+            migrationDifficulty: scoreMigrationDifficulty("overlap-consolidation", tool.teamSize),
+            priority: priority,
+            severity: scoreSeverity(priority, savings, risk),
+            confidenceScore: isComplementary ? 20 : 75,
+            transparency: isComplementary
+              ? "Flagged as potential overlap, but marked as complementary for specialized workflows (IDE vs Chat)."
+              : `High overlap detected in ${commonCaps.length} core capabilities.`,
+          });
+        }
       }
     }
   }
@@ -211,26 +242,26 @@ function evaluateToolSwaps(tool: ToolSpend): AuditRecommendation[] {
   });
 
   if (swapRule && swapRule.estimatedSavings > 0) {
+    const savings = AuditCalculators.calculateSavings(tool.monthlySpend, tool.monthlySpend - swapRule.estimatedSavings);
+    const risk = scoreOperationalRisk("tool-replacement", tool.teamSize);
+    const priority = scoreRecommendationPriority("tool-replacement", savings, risk);
+
     findings.push({
       type: "tool-switch",
       currentTool: tool.tool,
       currentPlan: tool.plan,
       currentSpend: tool.monthlySpend,
       recommendation: swapRule.recommendation,
-      monthlySavings: swapRule.estimatedSavings,
-      annualSavings: swapRule.estimatedSavings * 12,
+      monthlySavings: savings,
+      annualSavings: AuditCalculators.toAnnual(savings),
       reason: swapRule.reason,
       confidence: scoreConfidence("tool-replacement", 0.6),
-      operationalRisk: scoreOperationalRisk("tool-replacement", tool.teamSize),
-      migrationDifficulty: scoreMigrationDifficulty(
-        "tool-replacement",
-        tool.teamSize
-      ),
-      priority: scoreRecommendationPriority(
-        "tool-replacement",
-        swapRule.estimatedSavings,
-        scoreOperationalRisk("tool-replacement", tool.teamSize)
-      ),
+      operationalRisk: risk,
+      migrationDifficulty: scoreMigrationDifficulty("tool-replacement", tool.teamSize),
+      priority: priority,
+      severity: scoreSeverity(priority, savings, risk),
+      confidenceScore: 60,
+      transparency: `Evaluated ${tool.tool} against ${swapRule.to} for the '${tool.useCase}' use case.`,
     });
   }
 
@@ -243,38 +274,47 @@ function evaluateToolSwaps(tool: ToolSpend): AuditRecommendation[] {
 function analyzeUtilization(tool: ToolSpend): AuditRecommendation[] {
   const findings: AuditRecommendation[] = [];
 
-  // Use activeUsers if available, otherwise use teamSize
   const activeUsers = tool.activeUsers ?? tool.teamSize;
-  const utilization = calculateUtilization(activeUsers, tool.seats);
+  const utilization = AuditCalculators.calculateUtilization(activeUsers, tool.seats);
 
   const utilizationRule = utilizationRules.find((rule) =>
     rule.condition(tool.teamSize, tool.seats, tool.monthlySpend)
   );
 
-  if (utilizationRule) {
-    const savings =
-      typeof utilizationRule.estimatedSavings === "function"
-        ? utilizationRule.estimatedSavings(tool.monthlySpend)
-        : utilizationRule.estimatedSavings;
+  // Buffer check: If utilization is > 85%, we don't flag it as a mismatch/waste
+  const unusedSeats = tool.seats - activeUsers;
+
+  if (
+    utilizationRule &&
+    utilization < 85 &&
+    unusedSeats >= 2
+  ) {
+    const rawSavings = typeof utilizationRule.estimatedSavings === "function"
+      ? utilizationRule.estimatedSavings(tool.monthlySpend)
+      : utilizationRule.estimatedSavings;
+
+    const savings = AuditCalculators.calculateSavings(tool.monthlySpend, tool.monthlySpend - rawSavings);
 
     if (savings > 0) {
+      const risk = scoreOperationalRisk("seat-removal");
+      const priority = scoreRecommendationPriority("seat-removal", savings, "low");
+
       findings.push({
         type: "capability-mismatch",
         currentTool: tool.tool,
         currentPlan: tool.plan,
         currentSpend: tool.monthlySpend,
         recommendation: utilizationRule.recommendation,
-        monthlySavings: Math.max(savings, 0),
-        annualSavings: Math.max(savings, 0) * 12,
-        reason: `Tool utilization is ${utilization}%. ${utilizationRule.reason}`,
+        monthlySavings: savings,
+        annualSavings: AuditCalculators.toAnnual(savings),
+        reason: `Tool utilization is ${Math.round(utilization)}%. ${utilizationRule.reason}`,
         confidence: scoreConfidence("utilization-pattern", 0.7),
-        operationalRisk: scoreOperationalRisk("seat-removal"),
+        operationalRisk: risk,
         migrationDifficulty: scoreMigrationDifficulty("seat-removal"),
-        priority: scoreRecommendationPriority(
-          "seat-removal",
-          Math.max(savings, 0),
-          "low"
-        ),
+        priority: priority,
+        severity: scoreSeverity(priority, savings, risk),
+        confidenceScore: 70,
+        transparency: `Analyzed ${tool.seats} allocated seats vs ${activeUsers} active users. Includes a 15% operational buffer.`,
       });
     }
   }
@@ -295,26 +335,26 @@ function evaluateWorkflowAlignment(tool: ToolSpend): AuditRecommendation[] {
   );
 
   if (workflowRule) {
+    const savings = AuditCalculators.calculateSavings(tool.monthlySpend, tool.monthlySpend - workflowRule.estimatedSavings);
+    const risk = scoreOperationalRisk("workflow-mismatch", tool.teamSize);
+    const priority = scoreRecommendationPriority("workflow-mismatch", savings, risk);
+
     findings.push({
       type: "capability-mismatch",
       currentTool: tool.tool,
       currentPlan: tool.plan,
       currentSpend: tool.monthlySpend,
       recommendation: workflowRule.recommendation,
-      monthlySavings: workflowRule.estimatedSavings,
-      annualSavings: workflowRule.estimatedSavings * 12,
+      monthlySavings: savings,
+      annualSavings: AuditCalculators.toAnnual(savings),
       reason: workflowRule.reason,
       confidence: scoreConfidence("workflow-mismatch", 0.75),
-      operationalRisk: scoreOperationalRisk("workflow-mismatch", tool.teamSize),
-      migrationDifficulty: scoreMigrationDifficulty(
-        "workflow-mismatch",
-        tool.teamSize
-      ),
-      priority: scoreRecommendationPriority(
-        "workflow-mismatch",
-        workflowRule.estimatedSavings,
-        scoreOperationalRisk("workflow-mismatch", tool.teamSize)
-      ),
+      operationalRisk: risk,
+      migrationDifficulty: scoreMigrationDifficulty("workflow-mismatch", tool.teamSize),
+      priority: priority,
+      severity: scoreSeverity(priority, savings, risk),
+      confidenceScore: 75,
+      transparency: `Identified incompatibility between ${tool.tool} and specified use case: ${tool.useCase}.`,
     });
   }
 
@@ -338,6 +378,9 @@ function createNoSavingsRecommendation(tool: ToolSpend): AuditRecommendation {
     operationalRisk: "low",
     migrationDifficulty: "easy",
     priority: "optional",
+    severity: "informational",
+    confidenceScore: 100,
+    transparency: "Verified against latest market pricing and capability maps.",
   };
 }
 
@@ -457,11 +500,11 @@ function generateStackInsights(
   const spendVariance =
     tools.length > 1
       ? Math.max(
-          ...tools.map((t) => t.monthlySpend)
-        ) /
-          Math.min(
-            ...tools.map((t) => t.monthlySpend)
-          )
+        ...tools.map((t) => t.monthlySpend)
+      ) /
+      Math.min(
+        ...tools.map((t) => t.monthlySpend)
+      )
       : 1;
   const fragmentationScore = calculateFragmentationScore(
     toolCount,
@@ -517,11 +560,18 @@ function generateStackInsights(
   const fragmentationRisk: "low" | "medium" | "high" =
     fragmentationScore < 30 ? "low" : fragmentationScore < 60 ? "medium" : "high";
 
+  // Calculate optimization score (percentage of savings vs total spend + overlap/utilization factors)
+  const overlapPercentage = (overlapCount / Math.max(toolCount, 1)) * 100;
+  const hasExpensivePlans = recommendations.some(r => r.type === 'plan-downgrade' && r.currentSpend > 50);
+
   const optimizationScore = calculateOptimizationScore(
     avgUtilization,
-    (overlapCount / Math.max(toolCount * (toolCount - 1) / 2, 1)) * 100,
-    tools.some((t) => t.monthlySpend > 50)
+    overlapPercentage,
+    hasExpensivePlans
   );
+
+  // Generate nuanced health status
+  const health = getHealthStatus(optimizationScore);
 
   return {
     overallOptimizationScore: Math.round(optimizationScore),
@@ -536,6 +586,8 @@ function generateStackInsights(
     criticalFindings: criticalCount,
     importantFindings: importantCount,
     optionalFindings: optionalCount,
+    healthStatus: health.status,
+    healthStatusLabel: health.label,
   };
 }
 

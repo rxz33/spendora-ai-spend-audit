@@ -6,7 +6,10 @@ import { useLocalStorage } from "@/hooks/use-local-storage";
 import { pricingData } from "@/data/pricing";
 import { runAudit } from "@/lib/audit-engine";
 import { validateTool, type FormToolInput } from "@/types/forms";
-import { type AuditRecommendation } from "@/types/audit";
+import {
+  type AuditRecommendation,
+  type StackAuditInsights,
+} from "@/types/audit";
 
 import AuditResults from "@/components/audit-results";
 
@@ -33,6 +36,8 @@ export default function SpendForm() {
   );
 
   const [results, setResults] = useState<AuditRecommendation[]>([]);
+  const [stackInsights, setStackInsights] =
+    useState<StackAuditInsights | null>(null);
   const [summary, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -71,6 +76,10 @@ export default function SpendForm() {
   const handleAudit = async () => {
     setLoading(true);
 
+    setResults([]);
+    setSummary("");
+    setStackInsights(null);
+
     // Validate and convert form input to proper types
     const validatedTools = tools
       .map(validateTool)
@@ -82,8 +91,9 @@ export default function SpendForm() {
     }
 
     const auditResults = runAudit(validatedTools);
-    const { recommendations } = auditResults;
+    const { recommendations, stackInsights } = auditResults;
     setResults(recommendations);
+    setStackInsights(stackInsights);
 
     const totalMonthlySavings = recommendations.reduce((acc, item) => acc + item.monthlySavings, 0);
     const totalAnnualSavings = totalMonthlySavings * 12;
@@ -372,12 +382,12 @@ export default function SpendForm() {
       ))}
 
       <div className="flex flex-wrap gap-4">
-          <button
-            onClick={addTool}
-            className="rounded-xl border border-sky-200 bg-white/70 px-6 py-3 font-medium text-slate-800 transition hover:bg-white"
-          >
-            Add Tool
-          </button>
+        <button
+          onClick={addTool}
+          className="rounded-xl border border-sky-200 bg-white/70 px-6 py-3 font-medium text-slate-800 transition hover:bg-white"
+        >
+          Add Tool
+        </button>
 
         <button
           onClick={handleAudit}
@@ -390,10 +400,10 @@ export default function SpendForm() {
         </button>
       </div>
 
-      {results.length > 0 && (
+      {results.length > 0 && stackInsights && (
         <AuditResults
           results={results}
-          summary={summary}
+          insights={stackInsights}
         />
       )}
     </div>

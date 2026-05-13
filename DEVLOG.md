@@ -24,7 +24,7 @@
 
 ## Day 3 — 2026-05-09
 
-**Hours worked:** 4
+**Hours worked:** 7
 
 **What I did:** Focused on production hardening, AI integration, deployment stability, and repository polish. Implemented the AI-generated personalized audit summary feature using Groq with a deterministic fallback summary for graceful degradation. Added a dedicated API route for summary generation, integrated the AI summary into the audit workflow and results experience, and documented prompt engineering decisions in `PROMPTS.md`. Refactored the architecture to keep API keys server-side instead of exposing SDK usage inside client components.
 
@@ -62,7 +62,7 @@ Learned that visual branding and UX refinement have an outsized impact on conver
 
 ## Day 5 — 2026-05-11
 
-**Hours worked:** 6
+**Hours worked:** 8
 
 **What I did:** Executed comprehensive production-grade refactoring of the audit engine to enterprise-quality standards. This was a major architectural overhaul converting the system from simple rule-based returns to a sophisticated multi-dimensional scoring framework with stack-level insights.
 

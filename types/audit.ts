@@ -19,6 +19,11 @@ export type MigrationDifficulty = "easy" | "moderate" | "hard";
 export type RecommendationPriority = "critical" | "important" | "optional";
 
 /**
+ * Severity levels for audit findings
+ */
+export type SeverityLevel = "informational" | "low" | "medium" | "high" | "critical";
+
+/**
  * Enhanced input to audit engine - supports both team-based and company-level insights
  * Maintains backward compatibility with existing teamSize usage
  */
@@ -54,6 +59,9 @@ export type AuditRecommendation =
       operationalRisk: OperationalRisk;
       migrationDifficulty: MigrationDifficulty;
       priority: RecommendationPriority;
+      severity: SeverityLevel;
+      confidenceScore: number; // 0-100
+      transparency: string;
     }
   | {
       type: "plan-downgrade";
@@ -68,6 +76,9 @@ export type AuditRecommendation =
       operationalRisk: OperationalRisk;
       migrationDifficulty: MigrationDifficulty;
       priority: RecommendationPriority;
+      severity: SeverityLevel;
+      confidenceScore: number; // 0-100
+      transparency: string;
     }
   | {
       type: "tool-switch";
@@ -82,6 +93,9 @@ export type AuditRecommendation =
       operationalRisk: OperationalRisk;
       migrationDifficulty: MigrationDifficulty;
       priority: RecommendationPriority;
+      severity: SeverityLevel;
+      confidenceScore: number; // 0-100
+      transparency: string;
     }
   | {
       type: "consolidate-overlap";
@@ -96,6 +110,9 @@ export type AuditRecommendation =
       operationalRisk: OperationalRisk;
       migrationDifficulty: MigrationDifficulty;
       priority: RecommendationPriority;
+      severity: SeverityLevel;
+      confidenceScore: number; // 0-100
+      transparency: string;
     }
   | {
       type: "capability-mismatch";
@@ -110,6 +127,9 @@ export type AuditRecommendation =
       operationalRisk: OperationalRisk;
       migrationDifficulty: MigrationDifficulty;
       priority: RecommendationPriority;
+      severity: SeverityLevel;
+      confidenceScore: number; // 0-100
+      transparency: string;
     }
   | {
       type: "api-optimization";
@@ -124,6 +144,9 @@ export type AuditRecommendation =
       operationalRisk: OperationalRisk;
       migrationDifficulty: MigrationDifficulty;
       priority: RecommendationPriority;
+      severity: SeverityLevel;
+      confidenceScore: number; // 0-100
+      transparency: string;
     };
 
 /**
@@ -140,4 +163,8 @@ export interface StackAuditInsights {
   criticalFindings: number;
   importantFindings: number;
   optionalFindings: number;
+  
+  // NEW: Nuanced health status
+  healthStatus: "optimized" | "efficient" | "opportunities" | "inefficient" | "overspending";
+  healthStatusLabel: string;
 }

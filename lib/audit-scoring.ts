@@ -8,6 +8,7 @@ import {
   type OperationalRisk,
   type MigrationDifficulty,
   type RecommendationPriority,
+  type SeverityLevel,
 } from "@/types/audit";
 
 /**
@@ -194,6 +195,67 @@ export function scoreRecommendationPriority(
 }
 
 /**
+ * Score severity of an individual finding
+ */
+export function scoreSeverity(
+  priority: RecommendationPriority,
+  savings: number,
+  risk: OperationalRisk
+): SeverityLevel {
+  if (priority === "critical") return "critical";
+  if (savings > 100 && risk === "low") return "high";
+  if (savings > 50) return "medium";
+  if (savings > 0) return "low";
+  return "informational";
+}
+
+/**
+ * Determine nuanced health status based on optimization score
+ */
+export function getHealthStatus(score: number): {
+  status:
+  | "optimized"
+  | "efficient"
+  | "opportunities"
+  | "inefficient"
+  | "overspending";
+  label: string;
+} {
+  if (score < 20) {
+    return {
+      status: "optimized",
+      label: "Highly Optimized",
+    };
+  }
+
+  if (score < 40) {
+    return {
+      status: "efficient",
+      label: "Generally Efficient",
+    };
+  }
+
+  if (score < 65) {
+    return {
+      status: "opportunities",
+      label: "Optimization Opportunities",
+    };
+  }
+
+  if (score < 92) {
+    return {
+      status: "inefficient",
+      label: "Moderate Spend Inefficiency",
+    };
+  }
+
+  return {
+    status: "overspending",
+    label: "Significant Overspending",
+  };
+}
+
+/**
  * Calculate utilization percentage (0-100)
  * Helps determine if tool is underutilized
  */
@@ -255,7 +317,7 @@ export function calculateOptimizationScore(
   }
 
   // Overlap = opportunity
-  score += overlapPercentage * 2;
+  score += overlapPercentage * 0.7;
 
   // Expensive plans = opportunity
   if (hasExpensivePlans) {

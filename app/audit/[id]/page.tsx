@@ -121,9 +121,17 @@ export default async function AuditPage({
   }
 
   const isHighSavings =
-    audit.monthly_savings >= 500;
-  const isLowSavings =
-    audit.monthly_savings < 100;
+    audit.monthly_savings >= 100;
+
+  const isHealthy =
+    audit.monthly_savings < 10;
+
+  const hasOptimizationOpportunities =
+    audit.monthly_savings >= 10 &&
+    audit.monthly_savings < 50;
+
+  const hasSignificantWaste =
+    audit.monthly_savings >= 50;
 
   return (
     <main className="min-h-screen text-slate-900">
@@ -135,16 +143,18 @@ export default async function AuditPage({
           <div className="mt-4 flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-between">
             <div className="max-w-3xl">
               <h1 className="text-4xl font-bold leading-tight text-slate-950 md:text-5xl">
-                {isLowSavings
+                {isHealthy
                   ? "This AI stack looks healthy"
-                  : "This stack is leaving money on the table"}
+                  : hasOptimizationOpportunities
+                    ? "This stack has optimization opportunities"
+                    : "This stack is leaving money on the table"}
               </h1>
               <p className="mt-4 text-lg leading-8 text-slate-600">
-                {isHighSavings
-                  ? "The savings here are large enough to act on now."
-                  : isLowSavings
+                {isHealthy
                   ? "No major pricing mistakes. The current tool mix looks reasonable."
-                  : "A few practical changes could lower recurring spend."}
+                  : hasSignificantWaste
+                    ? "The savings here are large enough to act on now."
+                    : "A few practical changes could lower recurring spend without adding much friction."}
               </p>
             </div>
 
