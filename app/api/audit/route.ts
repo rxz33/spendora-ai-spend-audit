@@ -13,6 +13,8 @@ interface AuditData {
   monthlySavings: number;
   annualSavings: number;
   summary: string;
+  inputStack?: any;
+  pricingSnapshot?: any;
 }
 
 const AUDIT_LINK_TTL_DAYS = 30;
@@ -39,6 +41,8 @@ export async function POST(req: Request) {
           total_recommendations:
             body.tools.length,
           summary: body.summary,
+          input_stack: body.inputStack || null,
+          pricing_snapshot: body.pricingSnapshot || null,
           expires_at: expiresAt.toISOString(),
         },
       ])
