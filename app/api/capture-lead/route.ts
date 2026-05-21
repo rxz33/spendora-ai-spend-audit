@@ -63,10 +63,19 @@ export async function POST(req: Request) {
     }
 
     if (auditId) {
-      await supabase
+      console.log("[capture-lead] Linking email to audit:", { auditId, email });
+      const { error: updateError, count } = await supabase
         .from("audits")
         .update({ user_email: email })
         .eq("id", auditId);
+
+      if (updateError) {
+        console.error("[capture-lead] Failed to update audit with email:", updateError);
+      } else {
+        console.log("[capture-lead] Audit update result — rows matched:", count);
+      }
+    } else {
+      console.warn("[capture-lead] No auditId provided, skipping audit linkage");
     }
 
     if (!resendApiKey) {
