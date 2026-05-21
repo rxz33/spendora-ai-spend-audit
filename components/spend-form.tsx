@@ -40,6 +40,7 @@ export default function SpendForm() {
     useState<StackAuditInsights | null>(null);
   const [, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
+  const [auditId, setAuditId] = useState<string | null>(null);
 
   const addTool = () => {
     setTools([
@@ -119,6 +120,24 @@ export default function SpendForm() {
 
       const data = await response.json();
       setSummary(data.summary);
+
+      // Save audit immediately to persist it and get the shareable ID
+      const auditResponse = await fetch("/api/audit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          tools: recommendations,
+          monthlySavings: totalMonthlySavings,
+          annualSavings: totalAnnualSavings,
+          summary: data.summary,
+          inputStack: validatedTools,
+          pricingSnapshot: pricingData,
+        }),
+      });
+      if (auditResponse.ok) {
+        const auditData = await auditResponse.json();
+        setAuditId(auditData.id);
+      }
     } catch (error) {
       console.error(error);
       setSummary(
@@ -404,6 +423,7 @@ export default function SpendForm() {
         <AuditResults
           results={results}
           insights={stackInsights}
+          auditId={auditId}
         />
       )}
     </div>

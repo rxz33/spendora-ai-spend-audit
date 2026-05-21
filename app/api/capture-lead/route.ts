@@ -27,6 +27,7 @@ export async function POST(req: Request) {
       teamSize,
       monthlySavings,
       annualSavings,
+      auditId,
     } = body;
 
     if (!email) {
@@ -59,6 +60,13 @@ export async function POST(req: Request) {
 
     if (error) {
       throw error;
+    }
+
+    if (auditId) {
+      await supabase
+        .from("audits")
+        .update({ user_email: email })
+        .eq("id", auditId);
     }
 
     if (!resendApiKey) {

@@ -15,9 +15,11 @@ function formatCurrency(value: number) {
 export default function AuditResults({
   results,
   insights,
+  auditId,
 }: {
   results: AuditRecommendation[];
   insights: StackAuditInsights;
+  auditId?: string | null;
 }) {
   const [leadEmail, setLeadEmail] =
     useState("");
@@ -78,6 +80,11 @@ export default function AuditResults({
       : "Our audit found no major optimization opportunities. Your current AI tooling setup appears operationally reasonable.";
 
   const handleShareAudit = async () => {
+    if (auditId) {
+      setShareUrl(`${window.location.origin}/audit/${auditId}`);
+      return;
+    }
+    
     setShareLoading(true);
 
     try {
@@ -146,6 +153,7 @@ export default function AuditResults({
             monthlySavings: totalSavings,
             annualSavings,
             website,
+            auditId,
           }),
         }
       );
