@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { getSupabaseClient } from "@/server/supabase";
 import { type AuditRecommendation } from "@/types/audit";
-import { AutoFitText } from "@/components/auto-fit-text";
 
 export const revalidate = 0;
 

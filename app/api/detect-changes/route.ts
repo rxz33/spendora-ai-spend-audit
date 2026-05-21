@@ -70,7 +70,7 @@ export async function POST(req: Request) {
     for (const [email, userAudits] of affectedUsers.entries()) {
       if (resend) {
         try {
-          const linksHtml = userAudits.map((a: any) => {
+          const linksHtml = userAudits.map((a) => {
             const rerunLink = `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/audit/${a.id}/rerun`;
             return `<li><a href="${rerunLink}">View Diff for Audit ${a.id.slice(0,8)}</a></li>`;
           }).join('');

@@ -13,8 +13,8 @@ interface AuditData {
   monthlySavings: number;
   annualSavings: number;
   summary: string;
-  inputStack?: any;
-  pricingSnapshot?: any;
+  inputStack?: Record<string, unknown>;
+  pricingSnapshot?: Record<string, unknown>;
 }
 
 const AUDIT_LINK_TTL_DAYS = 30;
