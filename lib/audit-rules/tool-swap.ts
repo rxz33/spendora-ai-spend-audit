@@ -11,13 +11,13 @@ export const toolSwapRules: ToolSwapRule[] = [
     id: "cursor-to-copilot",
     from: "Cursor",
     to: "GitHub Copilot",
-    fromPrice: getPlanPrice("Cursor", "Pro") || 20,
-    toPrice: getPlanPrice("GitHub Copilot", "Individual") || 10,
+    get fromPrice() { return getPlanPrice("Cursor", "Pro") || 20; },
+    get toPrice() { return getPlanPrice("GitHub Copilot", "Individual") || 10; },
     condition: (useCase: string, _teamSize: number, _monthlySpend: number) => useCase === "coding",
     recommendation: "Consider GitHub Copilot Individual ($10/mo) as Cursor alternative.",
     reason:
       "Both provide VSCode-integrated AI coding. GitHub Copilot is half the price ($10 vs $20). Coding quality similar for non-advanced use cases. Savings: $10/month.",
-    estimatedSavings: (getPlanPrice("Cursor", "Pro") || 20) - (getPlanPrice("GitHub Copilot", "Individual") || 10),
+    get estimatedSavings() { return (getPlanPrice("Cursor", "Pro") || 20) - (getPlanPrice("GitHub Copilot", "Individual") || 10); },
   },
 
   {
@@ -63,12 +63,12 @@ export const toolSwapRules: ToolSwapRule[] = [
     id: "windsurf-to-copilot",
     from: "Windsurf",
     to: "GitHub Copilot",
-    fromPrice: getPlanPrice("Windsurf", "Pro") || 15,
-    toPrice: getPlanPrice("GitHub Copilot", "Individual") || 10,
+    get fromPrice() { return getPlanPrice("Windsurf", "Pro") || 15; },
+    get toPrice() { return getPlanPrice("GitHub Copilot", "Individual") || 10; },
     condition: (useCase: string, _teamSize: number, _monthlySpend: number) => useCase === "coding",
     recommendation: "Switch to GitHub Copilot Individual ($10/mo).",
     reason:
       "Windsurf ($15/mo) and GitHub Copilot ($10/mo) have similar VSCode integration. Copilot has larger community + better pricing. Savings: $5/month.",
-    estimatedSavings: (getPlanPrice("Windsurf", "Pro") || 15) - (getPlanPrice("GitHub Copilot", "Individual") || 10),
+    get estimatedSavings() { return (getPlanPrice("Windsurf", "Pro") || 15) - (getPlanPrice("GitHub Copilot", "Individual") || 10); },
   },
 ];

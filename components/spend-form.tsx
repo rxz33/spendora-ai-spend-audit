@@ -80,6 +80,7 @@ export default function SpendForm() {
     setResults([]);
     setSummary("");
     setStackInsights(null);
+    setAuditId(null);
 
     // Validate and convert form input to proper types
     const validatedTools = tools

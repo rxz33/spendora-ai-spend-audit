@@ -7,19 +7,25 @@ import { runAudit } from "@/lib/audit-engine";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { tool, newPrice } = body;
+    const tool = body.tool;
+    const newPrice = body.newPrice !== undefined ? body.newPrice : body.new_price;
+    const planName = body.planName || body.plan_name;
 
     if (!tool || newPrice === undefined) {
-      return NextResponse.json({ error: "Missing tool or newPrice" }, { status: 400 });
+      return NextResponse.json({ error: "Missing tool or newPrice/new_price" }, { status: 400 });
     }
 
     // 1. Update pricing in memory (Dynamic Override)
     const toolIndex = pricingData.findIndex(t => t.tool.toLowerCase() === tool.toLowerCase());
     if (toolIndex >= 0) {
-      // Find the Pro or Individual plan to update (most common)
-      const plan = pricingData[toolIndex].plans.find(p => p.name === "Pro" || p.name === "Individual");
-      if (plan) {
-        plan.monthlyPrice = newPrice;
+      if (planName) {
+        const plan = pricingData[toolIndex].plans.find(p => p.name.toLowerCase() === planName.toLowerCase());
+        if (plan) plan.monthlyPrice = newPrice;
+      } else {
+        // Fallback: update all paid plans if no specific plan is named
+        pricingData[toolIndex].plans.forEach(p => {
+          if (p.monthlyPrice > 0) p.monthlyPrice = newPrice;
+        });
       }
     }
 
