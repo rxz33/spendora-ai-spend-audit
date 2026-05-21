@@ -1,4 +1,5 @@
 import { type PlanEfficiencyRule } from "@/types/audit-rules";
+import { getPlanPrice } from "@/lib/utils";
 
 /**
  * Plan Efficiency Rules
@@ -14,8 +15,8 @@ export const planEfficiencyRules: PlanEfficiencyRule[] = [
     recommendation: "Downgrade to ChatGPT Plus",
     reason:
       "ChatGPT Team ($30/user/month) is oversized for teams ≤2 people. ChatGPT Plus ($20/month per person) provides identical capabilities. Savings: $10-40/month depending on team size.",
-    suggestedMonthlyCost: 20,
-    estimatedSavings: (_teamSize: number) => Math.max(30 - 20, 0),
+    get suggestedMonthlyCost() { return getPlanPrice("ChatGPT", "Plus") || 20; },
+    estimatedSavings: (_teamSize: number) => Math.max((getPlanPrice("ChatGPT", "Team") || 30) - (getPlanPrice("ChatGPT", "Plus") || 20), 0),
   },
 
   {
@@ -26,8 +27,8 @@ export const planEfficiencyRules: PlanEfficiencyRule[] = [
     recommendation: "Downgrade to Claude Pro",
     reason:
       "Claude Team ($30/user/month) is unnecessary for small teams. Claude Pro ($20/month) covers individual usage. Savings: $10-40/month.",
-    suggestedMonthlyCost: 20,
-    estimatedSavings: (_teamSize: number) => Math.max(30 - 20, 0),
+    get suggestedMonthlyCost() { return getPlanPrice("Claude", "Pro") || 20; },
+    estimatedSavings: (_teamSize: number) => Math.max((getPlanPrice("Claude", "Team") || 30) - (getPlanPrice("Claude", "Pro") || 20), 0),
   },
 
   {
@@ -38,8 +39,8 @@ export const planEfficiencyRules: PlanEfficiencyRule[] = [
     recommendation: "Downgrade to Cursor Pro",
     reason:
       "Cursor Business ($40/month) is designed for larger teams with centralized billing. For ≤3 developers, Cursor Pro ($20/month) is more cost-effective. Savings: $20/month.",
-    suggestedMonthlyCost: 20,
-    estimatedSavings: (_teamSize: number) => 20,
+    get suggestedMonthlyCost() { return getPlanPrice("Cursor", "Pro") || 20; },
+    estimatedSavings: (_teamSize: number) => (getPlanPrice("Cursor", "Business") || 40) - (getPlanPrice("Cursor", "Pro") || 20),
   },
 
   {

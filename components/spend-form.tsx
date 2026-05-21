@@ -40,6 +40,7 @@ export default function SpendForm() {
     useState<StackAuditInsights | null>(null);
   const [, setSummary] = useState("");
   const [loading, setLoading] = useState(false);
+  const [auditId, setAuditId] = useState<string | null>(null);
 
   const addTool = () => {
     setTools([
@@ -79,6 +80,7 @@ export default function SpendForm() {
     setResults([]);
     setSummary("");
     setStackInsights(null);
+    setAuditId(null);
 
     // Validate and convert form input to proper types
     const validatedTools = tools
@@ -97,6 +99,25 @@ export default function SpendForm() {
 
     const totalMonthlySavings = recommendations.reduce((acc, item) => acc + item.monthlySavings, 0);
     const totalAnnualSavings = totalMonthlySavings * 12;
+
+    // Fire audit persistence immediately (don't wait for summary)
+    const auditSavePromise = fetch("/api/audit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        tools: recommendations,
+        monthlySavings: totalMonthlySavings,
+        annualSavings: totalAnnualSavings,
+        summary: "",
+        inputStack: validatedTools,
+        pricingSnapshot: pricingData,
+      }),
+    }).then(async (res) => {
+      if (res.ok) {
+        const auditData = await res.json();
+        setAuditId(auditData.id);
+      }
+    }).catch((err) => console.error("Audit save failed:", err));
 
     try {
       const response = await fetch("/api/generate-summary", {
@@ -125,6 +146,9 @@ export default function SpendForm() {
         "Your audit identified optimization opportunities across your AI tooling stack, including plan efficiency improvements and reduced subscription overlap."
       );
     }
+
+    // Ensure audit save completes before we finish
+    await auditSavePromise;
 
     setLoading(false);
   };
@@ -404,6 +428,7 @@ export default function SpendForm() {
         <AuditResults
           results={results}
           insights={stackInsights}
+          auditId={auditId}
         />
       )}
     </div>
